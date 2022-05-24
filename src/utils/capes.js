@@ -2,6 +2,7 @@ import fs from 'graceful-fs';
 import { Octokit } from '@octokit/core';
 import * as config from '../../config.js';
 import { format } from './uuid.js';
+import { capeRepo } from '../../config.js';
 
 const octokit = new Octokit({
   auth: config.githubToken,
@@ -9,10 +10,10 @@ const octokit = new Octokit({
 
 const pull = async () => {
   octokit.request('GET /repos/{owner}/{repo}/contents/{path}', {
-    owner: 'i-spin',
-    repo: 'cape-api',
-    path: 'capes.json',
-    ref: 'capes',
+    owner: capeRepo.owner,
+    repo: capeRepo.repo,
+    path: capeRepo.path,
+    ref: capeRepo.branch,
   }).then(res => {
     if (fs.existsSync('../capes.json') && Buffer.from(res.data.content, 'base64') !== fs.readFileSync('../capes.json')) {
       return 'conflict';
@@ -27,10 +28,10 @@ const push = async () => {
     return 'not found';
   }
   octokit.request('PUT /repos/{owner}/{repo}/contents/{path}', {
-    owner: 'i-spin',
-    repo: 'cape-api',
-    path: 'capes.json',
-    branch: 'capes',
+    owner: capeRepo.owner,
+    repo: capeRepo.repo,
+    path: capeRepo.path,
+    branch: capeRepo.branch,
     message: new Date().toISOString(),
     committer: {
       name: 'Cape Bot',
