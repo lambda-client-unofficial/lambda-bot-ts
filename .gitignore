@@ -1,0 +1,5 @@
+node_modules/
+config.js
+.vscode/
+capes.json
+capes.json.shasum
