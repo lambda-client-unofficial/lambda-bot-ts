@@ -1,5 +1,6 @@
 import { MessageEmbed, Client, Message } from 'discord.js';
 import pluginUtils from '../utils/plugins.js';
+import fs from 'graceful-fs';
 import colors from '../utils/colors.js';
 
 /**
@@ -9,15 +10,15 @@ import colors from '../utils/colors.js';
  * @param {string[]} args
  */
 const invoke = async (client, message, args) => {
-  const plugins = await pluginUtils.listPlugins();
+  const plugins = (await pluginUtils.listPlugins()).data;
+  fs.writeFileSync('../data.json', JSON.stringify(plugins));
   const embed = new MessageEmbed()
     .setColor(colors.blue)
     .setTitle('Plugins List');
-  // plugins.forEach((plugin) => {
-  //   embed.addField(`[${plugin.full_name}](${plugin.html_url})`, `**Description**:\n${plugin.description}\n\n**Stars:**\n${plugin.stargazers_count}\n\n**License:**\n${plugin.license.name}`, true);
-  // });
-  // message.channel.send({ embeds: [embed] });
-  console.log(plugins);
+  plugins.forEach((plugin) => {
+    embed.addField(`${plugin.name}`, `**Link:**\n${plugin.html_url}\n**Description**:\n${plugin.description}\n**Stars:**\n${plugin.stargazers_count}`, true);
+  });
+  message.channel.send({ embeds: [embed] });
 };
 
 const info = {

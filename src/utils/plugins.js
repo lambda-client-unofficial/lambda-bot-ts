@@ -5,11 +5,7 @@ const octokit = new Octokit({
   auth: config.githubToken,
 });
 
-const listPlugins = async () => {
-  octokit.request('GET /orgs/{org}/repos', {
-    org: 'lambda-plugins',
-  }).then((res) => res);
-};
+const listPlugins = () => octokit.request('GET /orgs/{org}/repos', { org: 'lambda-plugins' });
 
 const pluginUtils = {
   listPlugins,
