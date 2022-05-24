@@ -1,7 +1,7 @@
 import { Client, Intents } from "discord.js";
 import fs from 'graceful-fs';
 import * as config from "../config.js";
-import * as embeds from "./utils/embed.js";
+import embedUtils from "./utils/embed.js";
 
 const bot = new Client({ intents: [Intents.FLAGS.GUILD_MESSAGES, Intents.FLAGS.GUILDS] })
 
@@ -33,7 +33,7 @@ bot.on('messageCreate', async message => {
     const command = commands.get(commandName);
     command.invoke(bot, message, args);
   } catch (error) {
-    message.channel.send({ embeds: [embeds.error(`${error.toString()}`)] });
+    message.channel.send({ embeds: [embedUtils.error(`${error.toString()}`)] });
   }
 })
 

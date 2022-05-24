@@ -1,7 +1,7 @@
 import { Client, Message } from "discord.js"
-import * as capeUtils from "../utils/capes.js";
-import * as embedUtils from "../utils/embed.js";
-import { format } from "../utils/uuid.js";
+import capeUtils from "../utils/capes.js";
+import embedUtils from "../utils/embed.js";
+import uuidUtils from "../utils/uuid.js";
 
 /**
  * 
@@ -34,7 +34,7 @@ const invoke = async (client, message, args) => {
         if (addResult === 'not found') {
           message.channel.send({ embeds: [embedUtils.error('No local data found. Please pull first.')] });
         }
-        message.channel.send({ embeds: [embedUtils.success(`Added <@${args[1]}> with UUID ${format(args[2])}`)] });
+        message.channel.send({ embeds: [embedUtils.success(`Added <@${args[1]}> with UUID ${uuidUtils.format(args[2])}`)] });
         break;
       default:
         message.channel.send({ embeds: [embedUtils.error('Specify push or pull.')] })

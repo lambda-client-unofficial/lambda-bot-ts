@@ -1,6 +1,6 @@
 import { Client, Message, MessageEmbed } from "discord.js"
 import ms from 'ms';
-import { colors } from "../utils/colors.js";
+import colors from "../utils/colors.js";
 
 /**
  * 

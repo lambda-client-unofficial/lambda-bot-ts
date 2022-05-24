@@ -1,7 +1,7 @@
 import { MessageEmbed } from "discord.js";
 import { Client, Message } from "discord.js"
-import { colors } from "../utils/colors.js";
-import { error } from "../utils/embed.js";
+import colors from "../utils/colors.js";
+import embedUtils from "../utils/embed.js";
 import fetch from 'node-fetch';
 
 /**
@@ -14,13 +14,13 @@ const invoke = (client, message, args) => {
   switch (args[0]) {
     case 'name':
       if (!args[1]) {
-        message.channel.send({ embeds: [error('Please provide a name.')] });
+        message.channel.send({ embeds: [embedUtils.error('Please provide a name.')] });
       }
       fetch(`https://api.mojang.com/users/profiles/minecraft/${args[1]}`)
         .then(res => res.json())
         .then(data => {
           if (!data.id || !data.name) {
-            message.channel.send({ embeds: [error('No user found.')] });
+            message.channel.send({ embeds: [embedUtils.error('No user found.')] });
             return
           }
           const embed = new MessageEmbed()
@@ -30,18 +30,18 @@ const invoke = (client, message, args) => {
             .setColor(colors.blue)
           message.channel.send({ embeds: [embed] });
         })
-        .catch(err => { error(err) });
+        .catch(err => { embedUtils.error(err) });
       break;
 
     case 'uuid':
       if (!args[1]) {
-        message.channel.send({ embeds: [error('Please provide a UUID.')] });
+        message.channel.send({ embeds: [embedUtils.error('Please provide a UUID.')] });
       }
       fetch(`https://api.mojang.com/user/profiles/${args[1]}/names`)
         .then(res => res.json())
         .then(data => {
           if (!data[data.length - 1]) {
-            message.channel.send({ embeds: [error('No user found.')] });
+            message.channel.send({ embeds: [embedUtils.error('No user found.')] });
             return
           }
           const embed = new MessageEmbed()
@@ -51,10 +51,10 @@ const invoke = (client, message, args) => {
             .setColor(colors.blue)
           message.channel.send({ embeds: [embed] });
         })
-        .catch(err => { error(err) });
+        .catch(err => { embedUtils.error(err) });
       break;
     default:
-      message.channel.send({ embeds: [error('Specify name or uuid.')] })
+      message.channel.send({ embeds: [embedUtils.error('Specify name or uuid.')] })
       break;
   }
 }

@@ -4,4 +4,4 @@ const colors = {
   blue: 0x8866ff,
 }
 
-export { colors }
+export default colors;

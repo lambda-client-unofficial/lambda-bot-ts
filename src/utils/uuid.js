@@ -7,6 +7,8 @@ const format = (uuid) => {
   return `${part1}-${part2}-${part3}-${part4}-${part5}`;
 }
 
-export {
+const uuidUtils = {
   format,
 }
+
+export default uuidUtils;

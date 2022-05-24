@@ -15,7 +15,10 @@ const success = (success) => (
     .setColor(colors.green)
 )
 
-export {
+
+const embedUtils = {
   error,
-  success
-};
+  success,
+}
+
+export default embedUtils;

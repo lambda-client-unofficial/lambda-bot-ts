@@ -1,4 +1,4 @@
-import * as capetUtils from '../utils/capes.js';
+import capetUtils from '../utils/capes.js';
 import ms from 'ms';
 
 const loop = () => {

@@ -68,8 +68,10 @@ const add = async (discordId, uuid) => {
   fs.writeFileSync('../capes.json', JSON.stringify(data, null, 2));
 }
 
-export {
+const capeUtils = {
   pull,
   push,
-  add
+  add,
 }
+
+export default capeUtils;
