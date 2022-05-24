@@ -33,7 +33,7 @@ bot.on('messageCreate', async message => {
     const command = commands.get(commandName);
     command.invoke(bot, message, args);
   } catch (error) {
-    message.channel.send({ embeds: [embeds.error(error)] });
+    message.channel.send({ embeds: [embeds.error(`${error.toString()}`)] });
   }
 })
 

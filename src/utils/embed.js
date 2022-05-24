@@ -8,6 +8,14 @@ const error = (error) => (
     .setColor(colors.red)
 );
 
+const success = (success) => (
+  new MessageEmbed()
+    .setTitle("Success")
+    .addField("Info", success)
+    .setColor(colors.green)
+)
+
 export {
   error,
+  success
 };
