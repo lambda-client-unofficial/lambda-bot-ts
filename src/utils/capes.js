@@ -1,7 +1,7 @@
 import fs from 'graceful-fs';
 import { Octokit } from '@octokit/core';
 import * as config from '../../config.js';
-import { format } from './uuid.js';
+import uuidUtils from './uuid.js';
 import { capeRepo } from '../../config.js';
 
 const octokit = new Octokit({
@@ -53,7 +53,7 @@ const add = async (discordId, uuid) => {
     capes: [
       {
         cape_uuid: parseInt(data[data.length - 1].capes[0].cape_uuid, 10) + 1,
-        player_uuid: format(uuid),
+        player_uuid: uuidUtils.format(uuid),
         type: 'CONTRIBUTOR',
         color: {
           primary: '272727',
