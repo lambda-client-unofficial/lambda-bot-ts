@@ -14,14 +14,14 @@ const pull = async () => {
     repo: capeRepo.repo,
     path: capeRepo.path,
     ref: capeRepo.branch,
-  }).then(res => {
+  }).then((res) => {
     if (fs.existsSync('../capes.json') && Buffer.from(res.data.content, 'base64') !== fs.readFileSync('../capes.json')) {
       return 'conflict';
     }
     fs.writeFileSync('../capes.json', Buffer.from(res.data.content, 'base64'));
     fs.writeFileSync('../capes.json.shasum', res.data.sha);
   });
-}
+};
 
 const push = async () => {
   if (!fs.existsSync('../capes.json') || !fs.existsSync('../capes.json.shasum')) {
@@ -35,14 +35,12 @@ const push = async () => {
     message: new Date().toISOString(),
     committer: {
       name: 'Cape Bot',
-      email: 'cape@lamb.da'
+      email: 'cape@lamb.da',
     },
     content: Buffer.from(fs.readFileSync('../capes.json')).toString('base64'),
     sha: fs.readFileSync('../capes.json.shasum').toString(),
-  }).then(res => {
-    return res;
-  });
-}
+  }).then((res) => res);
+};
 
 const add = async (discordId, uuid) => {
   if (!fs.existsSync('../capes.json') || !fs.existsSync('../capes.json.shasum')) {
@@ -51,27 +49,27 @@ const add = async (discordId, uuid) => {
 
   const data = JSON.parse(fs.readFileSync('../capes.json'));
   data.push({
-    "id": discordId,
-    "capes": [
+    id: discordId,
+    capes: [
       {
-        "cape_uuid": parseInt(data[data.length - 1].capes[0].cape_uuid) + 1,
-        "player_uuid": format(uuid),
-        "type": "CONTRIBUTOR",
-        "color": {
-          "primary": "272727",
-          "border": "363636"
-        }
-      }
+        cape_uuid: parseInt(data[data.length - 1].capes[0].cape_uuid, 10) + 1,
+        player_uuid: format(uuid),
+        type: 'CONTRIBUTOR',
+        color: {
+          primary: '272727',
+          border: '363636',
+        },
+      },
     ],
-    "is_premium": true
-  })
+    is_premium: true,
+  });
   fs.writeFileSync('../capes.json', JSON.stringify(data, null, 2));
-}
+};
 
 const capeUtils = {
   pull,
   push,
   add,
-}
+};
 
 export default capeUtils;

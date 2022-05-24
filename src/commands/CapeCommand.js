@@ -1,16 +1,16 @@
-import { Client, Message } from "discord.js"
-import capeUtils from "../utils/capes.js";
-import embedUtils from "../utils/embed.js";
-import uuidUtils from "../utils/uuid.js";
+import { Client, Message } from 'discord.js';
+import capeUtils from '../utils/capes.js';
+import embedUtils from '../utils/embed.js';
+import uuidUtils from '../utils/uuid.js';
 
 /**
- * 
- * @param {Client} client 
- * @param {Message} message 
- * @param {string[]} args 
+ *
+ * @param {Client} client
+ * @param {Message} message
+ * @param {string[]} args
  */
 const invoke = async (client, message, args) => {
-  if (!message.member.roles.cache.has("848787555575267328")) {
+  if (message.member.roles.cache.has('848787555575267328')) {
     switch (args[0]) {
       case 'pull':
         const pullResult = await capeUtils.pull();
@@ -37,19 +37,19 @@ const invoke = async (client, message, args) => {
         message.channel.send({ embeds: [embedUtils.success(`Added <@${args[1]}> with UUID ${uuidUtils.format(args[2])}`)] });
         break;
       default:
-        message.channel.send({ embeds: [embedUtils.error('Specify push or pull.')] })
+        message.channel.send({ embeds: [embedUtils.error('Specify push or pull.')] });
         break;
     }
   } else {
-    message.channel.send({ embeds: [embedUtils.error('You do not have the permission to do that.')] })
+    message.channel.send({ embeds: [embedUtils.error('You do not have the permission to do that.')] });
   }
-}
+};
 
 const info = {
   name: 'cape',
-}
+};
 
 export {
   invoke,
   info,
-}
+};
