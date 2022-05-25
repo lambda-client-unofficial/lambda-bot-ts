@@ -10,7 +10,7 @@ import uuidUtils from '../utils/uuid.js';
  * @param {string[]} args
  */
 const invoke = async (client, message, args) => {
-  if (message.member.roles.cache.has('848787555575267328')) {
+  if (!message.member.roles.cache.has('848787555575267328')) {
     switch (args[0]) {
       case 'pull':
         const pullResult = await capeUtils.pull();
@@ -30,7 +30,8 @@ const invoke = async (client, message, args) => {
         if (args.length - 1 < 2) {
           message.channel.send({ embeds: [embedUtils.error('Please provide a discord id and a UUID.')] });
         }
-        const addResult = capeUtils.add(args[1], args[2]);
+        const discordId = args[1].startsWith('<@') ? args[1].slice(2, -1) : args[1];
+        const addResult = capeUtils.add(discordId, args[2]);
         if (addResult === 'not found') {
           message.channel.send({ embeds: [embedUtils.error('No local data found. Please pull first.')] });
         }
