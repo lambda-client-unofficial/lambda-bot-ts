@@ -1,7 +1,15 @@
-import { Client, Intents } from 'discord.js';
-import fs from 'graceful-fs';
-import * as config from '../config.js';
-import embedUtils from './utils/embed.js';
+const { Client, Collection, Permissions } = require('discord.js');
+const { GatewayIntentBits } = require('discord-api-types/v10')
+const client = new Client({ intents: [
+	GatewayIntentBits.Guilds, GatewayIntentBits.GuildMembers, GatewayIntentBits.GuildInvites, GatewayIntentBits.GuildMessages, GatewayIntentBits.GuildVoiceStates, GatewayIntentBits.MessageContent
+], partials: [
+	"MESSAGE",
+	"CHANNEL",
+	"GUILD_MEMBER"
+]});
+const fs = require("fs")
+require('dotenv').config()
+const embedUtils = require("./utils/embed.js")
 
 const bot = new Client({ intents: [Intents.FLAGS.GUILD_MESSAGES, Intents.FLAGS.GUILDS] });
 
