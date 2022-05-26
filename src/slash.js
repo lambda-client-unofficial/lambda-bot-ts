@@ -5,10 +5,13 @@ const path = require('path');
 require('colors');
 
 const commands = [];
-readdirSync(`${__dirname}/\/commands/`).map(async (cmd) => {
-  commands.push(require(path.join(__dirname, `/\/commands/${cmd}`)));
-});
 const rest = new REST({ version: '10' }).setToken(process.env.TOKEN);
+
+readdirSync(`${__dirname}/commands/`).map(async (cmd) => {
+  // eslint-disable-next-line import/no-dynamic-require, global-require
+  commands.push(require(path.join(__dirname, `/commands/${cmd}`)));
+});
+
 module.exports = async (client) => {
   try {
     console.log('[Discord API] Started refreshing application (/) commands.'.yellow);
@@ -20,7 +23,6 @@ module.exports = async (client) => {
         );
       } catch (e) {
         console.log(e);
-        if (e.status != 403) console.log(e);
       }
     });
     console.log('[Discord API] Successfully reloaded application (/) commands.'.green);
