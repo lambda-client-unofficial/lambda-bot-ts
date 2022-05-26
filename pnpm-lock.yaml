@@ -7,6 +7,7 @@ specifiers:
   colors: ^1.4.0
   discord-api-types: ^0.33.0
   discord.js: ^14.0.0-dev.1653480262-68d5169
+  dotenv: ^16.0.1
   eslint: ^8.16.0
   eslint-config-airbnb-base: ^15.0.0
   eslint-plugin-import: ^2.26.0
@@ -28,6 +29,7 @@ dependencies:
   colors: 1.4.0
   discord-api-types: 0.33.0
   discord.js: 14.0.0-dev.1653480262-68d5169
+  dotenv: 16.0.1
   fs: 0.0.1-security
   graceful-fs: 4.2.10
   humanize-duration: 3.27.2
@@ -823,6 +825,11 @@ packages:
     dependencies:
       esutils: 2.0.3
     dev: true
+
+  /dotenv/16.0.1:
+    resolution: {integrity: sha512-1K6hR6wtk2FviQ4kEiSjFiH5rpzEVi8WW0x96aztHVMhEspNpc4DVOUTEHtEva5VThQ8IaBX1Pe4gSzpVVUsKQ==}
+    engines: {node: '>=12'}
+    dev: false
 
   /ecdsa-sig-formatter/1.0.11:
     resolution: {integrity: sha512-nagl3RYrbNv6kQkeJIpt6NJZy8twLB/2vtz6yN9Z4vRKHN4/QZJIEbqohALSgwKdnksuY3k5Addp5lg8sVoVcQ==}
