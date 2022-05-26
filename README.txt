@@ -7,4 +7,6 @@ Create a config.js file with a following content in the project directory:
         branch: '',                  // the branch of the capes.json file
     }
 
+    You need to add the following in the process environment: TOKEN="discord bot token" BOT_ID="discord bot id" GITHUB_ID="github token with repository access"
+
 Licensed under The Unlicense.
