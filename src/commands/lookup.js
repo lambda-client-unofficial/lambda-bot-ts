@@ -27,18 +27,18 @@ module.exports = {
       switch (index.name) {
         case 'name': {
           const username = await interaction.options.getString('username');
+          const user = await profile(username)
 
-          const user = profile(username)
-          if (!user.name || !user.id) return await interaction.reply({ embeds: [embedUtils.error('No user found.')] });
-          const _names = names(user.id)
+          if (!user) return await interaction.reply({ embeds: [embedUtils.error('No user found.')] });
+          const _names = await names(user)
           if(!_names) return await interaction.reply({ embeds: [embedUtils.error("Unknown error")]})
-          const _textures = textures(user.id)
-          if(!_textures) return await interaction.reply({ embeds: [embedUtils.error("No textures found")]})
+          const _textures = await textures(user)
+          if(!_textures) return await interaction.reply({ embeds: [embedUtils.error("Unknown error")]})
 
           const embed = new EmbedBuilder()
-            .setTitle(`${username}'s UUID`)
-            .addFields([{ name: 'UUID:', value: user.id }])
-            .setImage(`https://crafatar.com/renders/body/${user.id}?overlay`)
+            .setTitle(`${username}'s Profile`)
+            .addFields([{ name: 'UUID:', value: user }])
+            .setImage(`https://crafatar.com/renders/body/${user}?overlay`)
             .setColor('Blue');
           try {
             _names.forEach((name) => {
@@ -51,12 +51,12 @@ module.exports = {
           const row = new ActionRowBuilder().addComponents([
             new ButtonBuilder()
               .setStyle('Link')
-              .setURL(_textures.textures.SKIN.url)
+              .setURL(_textures)
               .setLabel('Player skin'),
           ]).addComponents([
             new ButtonBuilder()
               .setStyle('Link')
-              .setURL(`https://namemc.com/search?q=${user.name}`)
+              .setURL(`https://namemc.com/search?q=${username}`)
               .setLabel('NameMC'),
           ]);
           return await interaction.reply({ embeds: [embed], components: [row] });
