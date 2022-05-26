@@ -4,13 +4,12 @@ require('colors');
 module.exports = (client) => {
   const load = (dirs) => {
     const events = readdirSync(`${__dirname}/events/${dirs}/`).filter((d) => d.endsWith('js'));
-    console.log(events)
-    events.forEach((f) => {
+    events.forEach(file => {
       const evt = require(`${__dirname}/events/${dirs}/${file}`);
-      const eName = f.split('.')[0];
+      const eName = file.split('.')[0];
       client.on(eName, evt.bind(null, client));
       console.log(`${'[Events]'.yellow} Loaded ${eName.green}.`);
     });
-    ['client', 'guild'].forEach((x) => load(x));
   };
+  ['client', 'guild'].forEach((x) => load(x));
 };
