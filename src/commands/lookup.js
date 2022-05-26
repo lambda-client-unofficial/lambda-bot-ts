@@ -6,7 +6,7 @@ const checkuser = require('../utils/checkuser')
 
 module.exports = {
   name: 'lookup',
-  description: 'dLookup',
+  description: 'Lookup minecraft users',
   options: [
     {
       name: 'name',
