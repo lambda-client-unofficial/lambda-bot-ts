@@ -1,10 +1,10 @@
-const fs = require('fs')
-const uuidUtils = require('./uuid.js')
-require("dotenv").config()
-const { Octokit } = require("octokit")
-const axios = require("axios")
-const capeRepo = require("../config")
-const db = require("./quickdb")
+const fs = require('fs');
+const uuidUtils = require('./uuid.js');
+require('dotenv').config();
+const { Octokit } = require('octokit');
+const axios = require('axios');
+const capeRepo = require('../config');
+const db = require('./quickdb');
 
 const octokit = new Octokit({
   auth: process.env.GITHUB_TOKEN,
@@ -16,15 +16,15 @@ const pull = async (overwrite = Boolean) => {
     repo: capeRepo.repo,
     path: capeRepo.path,
     ref: capeRepo.branch,
-  }).catch((e => console.error(e)));
-  db.push("capes", Buffer.from(res.data.content, 'base64').toString())
-  db.sha_push(res.data.sha)
+  }).catch(((e) => console.error(e)));
+  db.push('capes', Buffer.from(res.data.content, 'base64').toString());
+  db.sha_push(res.data.sha);
 };
 
 const push = async () => {
-  let _ = await db.get("capes")
-  console.log(_)
-  let __ = await db.get("sha")
+  const _ = await db.get('capes');
+  console.log(_);
+  const __ = await db.get('sha');
   const ___ = await octokit.request('PUT /repos/{owner}/{repo}/contents/{path}', {
     owner: capeRepo.owner,
     repo: capeRepo.repo,
@@ -35,21 +35,21 @@ const push = async () => {
       name: 'Cape Bot',
       email: 'cape@lamb.da',
     },
-    content: Buffer.from(JSON.stringify(_)).toString("base64"),
+    content: Buffer.from(JSON.stringify(_)).toString('base64'),
     sha: __,
-  }).catch((e) => { 
-    console.log(e); return false
-  })
-  return true
+  }).catch((e) => {
+    console.log(e); return false;
+  });
+  return true;
 };
 
 const add = async (discordId, uuid, type) => {
-  let _ = await db.get("capes")
+  const _ = await db.get('capes');
   const template = {
     id: discordId,
     capes: [
       {
-        cape_uuid: Number(JSON.stringify(_.length+1)),
+        cape_uuid: Number(JSON.stringify(_.length + 1)),
         player_uuid: uuid,
         type: 'CONTRIBUTOR',
         color: {
@@ -59,16 +59,16 @@ const add = async (discordId, uuid, type) => {
       },
     ],
     is_premium: true,
-  }
+  };
   try {
-    _.push(template)
+    _.push(template);
   } catch (e) {
-    console.log(e)
+    console.log(e);
   }
-  db.push("capes", template).catch((e) => {
-    console.log(e)
-  })
-  console.log(await db.get('capes')).catch((e) => {})
+  db.push('capes', template).catch((e) => {
+    console.log(e);
+  });
+  console.log(await db.get('capes')).catch((e) => {});
 };
 
 const capeUtils = {
@@ -77,4 +77,4 @@ const capeUtils = {
   add,
 };
 
-module.exports = capeUtils
+module.exports = capeUtils;

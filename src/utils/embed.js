@@ -1,18 +1,14 @@
-const { EmbedBuilder } = require('discord.js')
+const { EmbedBuilder } = require('discord.js');
 
-const error = (msg = "") => {
-  return new EmbedBuilder()
+const error = (msg = '') => new EmbedBuilder()
   .setTitle('Error')
   .addFields([{ name: 'Info', value: `${msg}` }])
-  .setColor("Red")
-};
+  .setColor('Red');
 
-const success = (msg = "") => {
-  return  new EmbedBuilder()
+const success = (msg = '') => new EmbedBuilder()
   .setTitle('Success')
   .addFields([{ name: 'Info', value: `${msg}` }])
-  .setColor("Green")
-}
+  .setColor('Green');
 
 const embedUtils = {
   error,
