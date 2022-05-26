@@ -1,8 +1,7 @@
 const { EmbedBuilder, ActionRowBuilder, ButtonBuilder } = require('discord.js');
 const embedUtils = require('../utils/embed.js');
-const axios = require('axios').default;
 const timestampToDate = require('timestamp-to-date');
-const checkuser = require('../utils/checkuser')
+const { profile, names, textures } = require('../utils/minecraftProfile')
 
 module.exports = {
   name: 'lookup',
@@ -27,11 +26,14 @@ module.exports = {
     for (const index of interaction.options.data) {
       switch (index.name) {
         case 'name': {
-          const username = interaction.options.getString('username');
-          const user = (await axios.get(`https://api.mojang.com/users/profiles/minecraft/${username}`)).data;
-          if (!user.name || !user.id) return interaction.reply({ embeds: [embedUtils.error('No user found.')] });
-          const names = (await axios.get(`https://api.mojang.com/user/profiles/${user.id}/names`)).data;
-          const textures = JSON.parse(Buffer.from((await axios.get(`https://sessionserver.mojang.com/session/minecraft/profile/${user.id}`)).data?.properties[0]?.value, 'base64').toString());
+          const username = await interaction.options.getString('username');
+
+          const user = profile(username)
+          if (!user.name || !user.id) return await interaction.reply({ embeds: [embedUtils.error('No user found.')] });
+          const _names = names(user.id)
+          if(!_names) return await interaction.reply({ embeds: [embedUtils.error("Unknown error")]})
+          const _textures = textures(user.id)
+          if(!_textures) return await interaction.reply({ embeds: [embedUtils.error("No textures found")]})
 
           const embed = new EmbedBuilder()
             .setTitle(`${username}'s UUID`)
@@ -39,7 +41,7 @@ module.exports = {
             .setImage(`https://crafatar.com/renders/body/${user.id}?overlay`)
             .setColor('Blue');
           try {
-            names.forEach((name) => {
+            _names.forEach((name) => {
               let time = timestampToDate(name.changedToAt, 'yyyy-MM-dd HH:mm:ss'); if (time.toLowerCase().includes('nan')) time = 'First Appeared Name';
               embed.addFields([{ name: name.name ?? 'Unknown', value: time ?? 'First Appeared Name' }]);
             });
@@ -49,7 +51,7 @@ module.exports = {
           const row = new ActionRowBuilder().addComponents([
             new ButtonBuilder()
               .setStyle('Link')
-              .setURL(textures.textures.SKIN.url)
+              .setURL(_textures.textures.SKIN.url)
               .setLabel('Player skin'),
           ]).addComponents([
             new ButtonBuilder()
