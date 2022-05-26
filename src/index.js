@@ -7,50 +7,23 @@ const client = new Client({ intents: [
 	"CHANNEL",
 	"GUILD_MEMBER"
 ]});
-const fs = require("fs")
 require('dotenv').config()
-const embedUtils = require("./utils/embed.js")
+const fs = require("fs")
 
-const bot = new Client({ intents: [Intents.FLAGS.GUILD_MESSAGES, Intents.FLAGS.GUILDS] });
 
-const commands = new Map();
-const commandFiles = fs.readdirSync('./commands').filter((file) => file.endsWith('.js'));
-commandFiles.forEach(async (file) => {
-  const command = await import(`./commands/${file}`);
-  commands.set(command.info.name, command);
-  console.log(`Loaded command ${command.info.name}`);
-});
-bot.commands = commands;
+client.commands = new Collection()
+client.slash = new Collection()
 
-const services = [];
-const serviceFiles = fs.readdirSync('./services').filter((file) => file.endsWith('.js'));
-serviceFiles.forEach(async (file) => {
-  const service = await import(`./services/${file}`);
-  services.push(service);
-  console.log(`Loaded service ${service.info.name}`);
-});
-bot.services = services;
-
-bot.on('messageCreate', async (message) => {
-  if (message.author.bot || !message.content.startsWith(config.prefix)) return;
-
-  const args = message.content.slice(config.prefix.length).trim().split(/ +/);
-  const commandName = args.shift().toLowerCase();
-
-  try {
-    const command = commands.get(commandName);
-    command.invoke(bot, message, args);
-  } catch (error) {
-    message.channel.send({ embeds: [embedUtils.error(`${error.toString()}`)] });
-  }
+client.on('ready', () => {
+  console.log(`Logged in as ${client.user.tag}!`);
+  require("./slash")(client)
+  require("./events")(client)
+  fs.readdirSync(__dirname+"/\/commands/").map(async cmd => {
+    let pull = require(`./commands/${cmd}`)
+    client.slash.set(pull.name, pull)
+    console.log(client.slash)
+  })
 });
 
-bot.on('ready', () => {
-  console.log(`Logged in as ${bot.user.tag}!`);
-});
+client.login(process.env.TOKEN);
 
-services
-  .filter((service) => !service.info.disabled)
-  .forEach((service) => { setInterval(service.loop, service.info.interval); });
-
-bot.login(config.discordToken);

@@ -1,23 +1,22 @@
-import { MessageEmbed } from 'discord.js';
-import colors from './colors.js';
+const { EmbedBuilder } = require('discord.js')
 
-const error = (msg) => (
-  new MessageEmbed()
-    .setTitle('Error')
-    .addField('Info', msg)
-    .setColor(colors.red)
-);
+const error = (msg = "") => {
+  return new EmbedBuilder()
+  .setTitle('Error')
+  .addFields([{ name: 'Info', value: `${msg}` }])
+  .setColor("Red")
+};
 
-const success = (msg) => (
-  new MessageEmbed()
-    .setTitle('Success')
-    .addField('Info', msg)
-    .setColor(colors.green)
-);
+const success = (msg = "") => {
+  return  new EmbedBuilder()
+  .setTitle('Success')
+  .addFields([{ name: 'Info', value: `${msg}` }])
+  .setColor("Green")
+}
 
 const embedUtils = {
   error,
   success,
 };
 
-export default embedUtils;
+module.exports = embedUtils;

@@ -1,33 +1,31 @@
-import fs from 'graceful-fs';
-import { Octokit } from '@octokit/core';
-import * as config from '../../config.js';
-import uuidUtils from './uuid.js';
-import { capeRepo } from '../../config.js';
+const fs = require('fs')
+const uuidUtils = require('./uuid.js')
+require("dotenv").config()
+const { Octokit } = require("octokit")
+const axios = require("axios")
+const capeRepo = require("../config")
+const db = require("./quickdb")
 
 const octokit = new Octokit({
-  auth: config.githubToken,
+  auth: process.env.GITHUB_TOKEN,
 });
 
-const pull = async () => {
-  octokit.request('GET /repos/{owner}/{repo}/contents/{path}', {
+const pull = async (overwrite = Boolean) => {
+  const res = await octokit.request('GET /repos/{owner}/{repo}/contents/{path}', {
     owner: capeRepo.owner,
     repo: capeRepo.repo,
     path: capeRepo.path,
     ref: capeRepo.branch,
-  }).then((res) => {
-    if (fs.existsSync('../capes.json') && Buffer.from(res.data.content, 'base64') !== fs.readFileSync('../capes.json')) {
-      return 'conflict';
-    }
-    fs.writeFileSync('../capes.json', Buffer.from(res.data.content, 'base64'));
-    fs.writeFileSync('../capes.json.shasum', res.data.sha);
-  });
+  }).catch((e => console.error(e)));
+  db.push("capes", Buffer.from(res.data.content, 'base64').toString())
+  db.sha_push(res.data.sha)
 };
 
 const push = async () => {
-  if (!fs.existsSync('../capes.json') || !fs.existsSync('../capes.json.shasum')) {
-    return 'not found';
-  }
-  octokit.request('PUT /repos/{owner}/{repo}/contents/{path}', {
+  let _ = await db.get("capes")
+  console.log(_)
+  let __ = await db.get("sha")
+  const ___ = await octokit.request('PUT /repos/{owner}/{repo}/contents/{path}', {
     owner: capeRepo.owner,
     repo: capeRepo.repo,
     path: capeRepo.path,
@@ -37,23 +35,22 @@ const push = async () => {
       name: 'Cape Bot',
       email: 'cape@lamb.da',
     },
-    content: Buffer.from(fs.readFileSync('../capes.json')).toString('base64'),
-    sha: fs.readFileSync('../capes.json.shasum').toString(),
-  }).then((res) => res);
+    content: Buffer.from(JSON.stringify(_)).toString("base64"),
+    sha: __,
+  }).catch((e) => { 
+    console.log(e); return false
+  })
+  return true
 };
 
-const add = async (discordId, uuid) => {
-  if (!fs.existsSync('../capes.json') || !fs.existsSync('../capes.json.shasum')) {
-    return 'not found';
-  }
-
-  const data = JSON.parse(fs.readFileSync('../capes.json'));
-  data.push({
+const add = async (discordId, uuid, type) => {
+  let _ = await db.get("capes")
+  const template = {
     id: discordId,
     capes: [
       {
-        cape_uuid: parseInt(data[data.length - 1].capes[0].cape_uuid, 10) + 1,
-        player_uuid: uuidUtils.format(uuid),
+        cape_uuid: Number(JSON.stringify(_.length+1)),
+        player_uuid: uuid,
         type: 'CONTRIBUTOR',
         color: {
           primary: '272727',
@@ -62,8 +59,16 @@ const add = async (discordId, uuid) => {
       },
     ],
     is_premium: true,
-  });
-  fs.writeFileSync('../capes.json', JSON.stringify(data, null, 2));
+  }
+  try {
+    _.push(template)
+  } catch (e) {
+    console.log(e)
+  }
+  db.push("capes", template).catch((e) => {
+    console.log(e)
+  })
+  console.log(await db.get('capes')).catch((e) => {})
 };
 
 const capeUtils = {
@@ -72,4 +77,4 @@ const capeUtils = {
   add,
 };
 
-export default capeUtils;
+module.exports = capeUtils
