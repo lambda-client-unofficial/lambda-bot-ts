@@ -14,21 +14,19 @@ const client = new Client({
 });
 
 require('dotenv').config();
-const fs = require('fs');
+const { readdirSync } = require('fs');
 
 client.commands = new Collection();
 client.slash = new Collection();
 
 client.on('ready', () => {
   console.log(`Logged in as ${client.user.tag}!`);
-
-  require('./slash')(client); // TODO: Fix this later
+  require('./slash')(client);
   require('./events')(client);
 
-  fs.readdirSync(`${__dirname}/commands/`).map(async (cmd) => {
+  readdirSync(`${__dirname}/commands/`).map(async (cmd) => {
     const pull = require(`./commands/${cmd}`);
     client.slash.set(pull.name, pull);
-    console.log(client.slash);
   });
 });
 

@@ -2,6 +2,7 @@ const { EmbedBuilder, ActionRowBuilder, ButtonBuilder } = require('discord.js');
 const embedUtils = require('../utils/embed.js');
 const axios = require('axios').default;
 const timestampToDate = require('timestamp-to-date');
+const checkuser = require('../utils/checkuser')
 
 module.exports = {
   name: 'lookup',
@@ -27,20 +28,20 @@ module.exports = {
       switch (index.name) {
         case 'name': {
           const username = interaction.options.getString('username');
-          const _ = (await axios.get(`https://api.mojang.com/users/profiles/minecraft/${username}`)).data;
-          if (!_.name || !_.id) return interaction.reply({ embeds: [embedUtils.error('No user found.')] });
-          const names = (await axios.get(`https://api.mojang.com/user/profiles/${_.id}/names`)).data;
-          const textures = JSON.parse(Buffer.from((await axios.get(`https://sessionserver.mojang.com/session/minecraft/profile/${_.id}`)).data?.properties[0]?.value, 'base64').toString());
+          const user = (await axios.get(`https://api.mojang.com/users/profiles/minecraft/${username}`)).data;
+          if (!user.name || !user.id) return interaction.reply({ embeds: [embedUtils.error('No user found.')] });
+          const names = (await axios.get(`https://api.mojang.com/user/profiles/${user.id}/names`)).data;
+          const textures = JSON.parse(Buffer.from((await axios.get(`https://sessionserver.mojang.com/session/minecraft/profile/${user.id}`)).data?.properties[0]?.value, 'base64').toString());
 
           const embed = new EmbedBuilder()
             .setTitle(`${username}'s UUID`)
-            .addFields([{ name: 'UUID:', value: _.id }])
-            .setImage(`https://crafatar.com/renders/body/${_.id}?overlay`)
+            .addFields([{ name: 'UUID:', value: user.id }])
+            .setImage(`https://crafatar.com/renders/body/${user.id}?overlay`)
             .setColor('Blue');
           try {
             names.forEach((name) => {
-              let _ = timestampToDate(name.changedToAt, 'yyyy-MM-dd HH:mm:ss'); if (_.toLowerCase().includes('nan')) _ = 'First Appeared Name';
-              embed.addFields([{ name: name.name ?? 'Unknown', value: _ ?? 'First Appeared Name' }]);
+              let time = timestampToDate(name.changedToAt, 'yyyy-MM-dd HH:mm:ss'); if (time.toLowerCase().includes('nan')) time = 'First Appeared Name';
+              embed.addFields([{ name: name.name ?? 'Unknown', value: time ?? 'First Appeared Name' }]);
             });
           } catch (e) {
             console.log(e);
@@ -53,7 +54,7 @@ module.exports = {
           ]).addComponents([
             new ButtonBuilder()
               .setStyle('Link')
-              .setURL(`https://namemc.com/search?q=${_.name}`)
+              .setURL(`https://namemc.com/search?q=${user.name}`)
               .setLabel('NameMC'),
           ]);
           return await interaction.reply({ embeds: [embed], components: [row] });

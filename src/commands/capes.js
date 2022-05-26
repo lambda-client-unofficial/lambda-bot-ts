@@ -1,14 +1,7 @@
 const capeUtils = require('../utils/capes.js');
 const embedUtils = require('../utils/embed.js');
 const uuidUtils = require('../utils/uuid.js');
-const axios = require('axios').default;
-
-/**
- *
- * @param {Client} client
- * @param {Message} message
- * @param {string[]} args
- */
+const checkuser = require('../utils/checkuser.js');
 module.exports = {
   name: 'capes',
   description: 'Edit capes',
@@ -81,23 +74,14 @@ module.exports = {
         case 'add': {
           const minecraft_username = await interaction.options.getString('minecraft_username');
           const user = await interaction.options.getInteger('user_id');
-          try {
-            const _ = await axios.get(`https://discordapp.com/api/v9/users/${user}`, {
-              headers: {
-                authorization: `Bot ${process.env.TOKEN}`,
-              },
-            });
-          } catch {
-            return await interaction.reply({ embeds: [embedUtils.error('Invalid user')] });
-          }
+          if(!checkuser(user)) return await interaction.reply({ embeds: [embedUtils.error('Invalid user')] });
           const minecraft_uuid = await uuidUtils.usernameToUUID(minecraft_username);
-          console.log(minecraft_uuid);
           if (!minecraft_uuid) return await interaction.reply({ embeds: [embedUtils.error('Invalid username or nonexistent player')] });
           const addResult = capeUtils.add(user, minecraft_uuid);
           if (!addResult) return interaction.reply({ embeds: [embedUtils.error('No local data found. Please pull first.')] });
           return interaction.reply({ embeds: [embedUtils.success(`Added <@${user}>, Info: \`\`\`Username: ${minecraft_username}\nUUID: ${minecraft_uuid}\`\`\``)] });
         }
-        default: return interaction.reply({ embeds: [embedUtils.error('Why you choose nothing :skull:')] });
+        default: return interaction.reply({ embeds: [embedUtils.error('Please choose something.')] });
       }
     }
   },
