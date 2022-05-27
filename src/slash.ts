@@ -5,7 +5,7 @@ const { readdirSync } = require('graceful-fs');
 const path = require('path');
 require('colors');
 
-const commands = [];
+const commands: any[] = [];
 const rest = new REST({ version: '10' }).setToken(process.env.TOKEN);
 
 readdirSync(`${__dirname}/commands/`).map(async (cmd) => {
@@ -13,7 +13,7 @@ readdirSync(`${__dirname}/commands/`).map(async (cmd) => {
   commands.push(require(path.join(__dirname, `/commands/${cmd}`)));
 });
 
-module.exports = async (client) => {
+const register = async (client) => {
   try {
     console.log('[Discord API] Started refreshing application (/) commands.'.yellow);
     client.guilds.cache.forEach(async (guild) => {
@@ -31,3 +31,5 @@ module.exports = async (client) => {
     console.log(error);
   }
 };
+
+export default register;
