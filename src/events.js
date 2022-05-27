@@ -1,4 +1,4 @@
-const { readdirSync } = require('fs');
+const { readdirSync } = require('graceful-fs');
 require('colors');
 
 module.exports = (client) => {

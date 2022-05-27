@@ -1,6 +1,6 @@
 const { REST } = require('@discordjs/rest');
 const { Routes } = require('discord-api-types/v10');
-const { readdirSync } = require('fs');
+const { readdirSync } = require('graceful-fs');
 const path = require('path');
 require('colors');
 

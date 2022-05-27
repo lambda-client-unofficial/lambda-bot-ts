@@ -14,7 +14,7 @@ const client = new Client({
 });
 
 require('dotenv').config();
-const { readdirSync } = require('fs');
+const { readdirSync } = require('graceful-fs');
 
 client.commands = new Collection();
 client.slash = new Collection();

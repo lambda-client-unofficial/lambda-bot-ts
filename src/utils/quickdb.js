@@ -11,7 +11,6 @@ const push = async (key, ...data) => {
   const array = [];
   for (const i in data) {
     if (!safecheck(data[i])) return false;
-
     array.push(data[i]);
   }
   db.set(key, array);

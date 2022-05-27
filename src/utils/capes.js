@@ -1,8 +1,6 @@
-const fs = require('fs');
 const uuidUtils = require('./uuid.js');
 require('dotenv').config();
-const { Octokit } = require('octokit');
-const axios = require('axios');
+const { Octokit } = require('@octokit/core');
 const capeRepo = require('../config');
 const db = require('./quickdb');
 
