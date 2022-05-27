@@ -1,8 +1,7 @@
-import { Octokit } from '@octokit/core';
-import * as config from '../../config.js';
+const { Octokit } = require('@octokit/core');
 
 const octokit = new Octokit({
-  auth: config.githubToken,
+  auth: process.env.GITHUB_TOKEN,
 });
 
 const listPlugins = () => octokit.request('GET /orgs/{org}/repos', { org: 'lambda-plugins' });
@@ -11,4 +10,4 @@ const pluginUtils = {
   listPlugins,
 };
 
-export default pluginUtils;
+module.exports = pluginUtils;
