@@ -9,16 +9,17 @@ const init = async () => {
 const push = async (key, ...data) => {
   init();
   const array = [];
-  for (const i in data) {
+  // eslint-disable-next-line consistent-return
+  data.forEach((i) => {
     if (!safecheck(data[i])) return false;
     array.push(data[i]);
-  }
+  });
   db.set(key, array);
 };
-const sha_push = async (data, safecheck = false, origin) => {
+const shaPush = async (data, origin, check = false) => {
   init();
-  if (data === '') throw 'Empty data';
-  if (safecheck) if (sha1(origin) !== data) throw 'Content does not match the sha1 hash';
+  if (data === '') throw Error('Empty data');
+  if (check) if (sha1(origin) !== data) throw Error('Content does not match the sha1 hash');
   db.set('sha', data);
 };
 
@@ -31,6 +32,6 @@ const get = async (key = String) => {
 const modules = {
   push,
   get,
-  sha_push,
+  shaPush,
 };
 module.exports = modules;
