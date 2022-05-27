@@ -7,7 +7,7 @@ Create a config.js file with a following content in the project directory:
         branch: '',                  // the branch of the capes.json file
     }
 
-Then create a .env file withe the following content:
+Then add these variables in your process enviroment:
 
     TOKEN="discord bot token"
     BOT_ID="discord bot id"
