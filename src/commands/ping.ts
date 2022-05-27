@@ -1,4 +1,4 @@
-import { Client, CommandInteraction, Message } from "discord.js";
+import { Client, CommandInteraction, Message } from 'discord.js';
 
 import embedUtils from '../utils/embed';
 
