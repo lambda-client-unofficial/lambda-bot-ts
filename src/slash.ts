@@ -1,8 +1,9 @@
 import 'dotenv/config';
 import { REST } from '@discordjs/rest';
 import { Routes } from 'discord-api-types/v10';
+import { Client } from 'discord.js';
 import logger from './utils/logger';
-import commands from './shared/commands';
+import { commands, scanCommands } from './shared/commands';
 
 if (!process.env.TOKEN) {
   logger.error('[Discord API] No token found.');
@@ -11,9 +12,9 @@ if (!process.env.TOKEN) {
 
 const rest = new REST({ version: '10' }).setToken(process.env.TOKEN);
 
-const registerSlashCommands = async (client) => {
+const registerSlashCommands = async (client: Client) => {
+  scanCommands();
   try {
-    logger.log('[Discord API] Started refreshing application (/) commands.');
     client.guilds.cache.forEach(async (guild) => {
       try {
         if (!process.env.BOT_ID) {
@@ -28,7 +29,7 @@ const registerSlashCommands = async (client) => {
         logger.error(`[Discord API] Unable to refresh application (/) commands for ${guild.name}: ${e}`);
       }
     });
-    logger.log('[Discord API] Successfully reloaded application (/) commands.');
+    logger.log('[Discord API] Successfully registered all commands.');
   } catch (e) {
     logger.error(`[Discord API] Failed to reload application (/) commands: ${e}`);
   }
