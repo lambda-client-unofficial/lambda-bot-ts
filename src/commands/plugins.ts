@@ -3,11 +3,12 @@ import { Client, CommandInteraction, EmbedBuilder } from 'discord.js';
 import size from '../utils/bytes';
 import { listPlugins } from '../utils/plugins';
 
-module.exports = {
+export default {
   name: 'plugins',
   description: 'Check plugin list',
   timeout: ms('30s'),
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   run: async (interaction: CommandInteraction, _client: Client) => {
     const pluginList = [];
     const plugins = (await listPlugins()).data;
