@@ -13,8 +13,10 @@ const error = (message: string) => {
   console.error(`${colors.gray(new Date().toLocaleString())} ${colors.red('[ERROR]')} ${message}`);
 };
 
-export {
+const logger = {
   log,
   warn,
   error,
-};
+}
+
+export default logger;
