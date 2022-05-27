@@ -1,3 +1,4 @@
+/* eslint-disable global-require */
 const { Client, Collection } = require('discord.js');
 const { GatewayIntentBits } = require('discord-api-types/v10');
 
@@ -25,6 +26,7 @@ client.on('ready', () => {
   require('./events')(client);
 
   readdirSync(`${__dirname}/commands/`).map(async (cmd) => {
+    // eslint-disable-next-line import/no-dynamic-require
     const pull = require(`./commands/${cmd}`);
     client.slash.set(pull.name, pull);
   });

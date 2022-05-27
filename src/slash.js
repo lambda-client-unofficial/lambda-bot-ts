@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 const { REST } = require('@discordjs/rest');
 const { Routes } = require('discord-api-types/v10');
 const { readdirSync } = require('graceful-fs');
