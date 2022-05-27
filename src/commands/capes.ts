@@ -1,7 +1,8 @@
-const capeUtils = require('../utils/capes.js');
-const embedUtils = require('../utils/embed.js');
-const uuidUtils = require('../utils/uuid.js');
-const checkuser = require('../utils/checkuser.js');
+import capeUtils from '../utils/capes.js';
+import embedUtils from '../utils/embed.js';
+import uuidUtils from '../utils/uuid.js';
+import checkuser from '../utils/checkuser.js';
+import { CommandInteraction } from 'discord.js';
 
 module.exports = {
   name: 'capes',
@@ -58,11 +59,11 @@ module.exports = {
     },
   ],
 
-  run: async (interaction) => {
+  run: async (interaction: CommandInteraction) => {
     interaction.options.data.forEach(async (index) => {
       switch (index.name) {
         case 'pull': {
-          const isForced = interaction.options.getBoolean('force') ?? false;
+          const isForced = interaction.options.get('force') ?? false;
           const pullResult = await capeUtils.pull(isForced);
           if (!pullResult && !isForced) return interaction.reply({ embeds: [embedUtils.error('Add `force:true` in the options to override local data.')] });
           return interaction.reply({ embeds: [embedUtils.success('Pulled!')] });
