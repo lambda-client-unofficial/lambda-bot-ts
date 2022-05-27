@@ -4,7 +4,8 @@
   "description": "",
   "main": "src/index.js",
   "scripts": {
-    "dev": "cd src && node index.js"
+    "dev": "cd src && node index.js",
+    "lint": "./node_modules/.bin/eslint ./src/**/*.js"
   },
   "author": "i-spin",
   "license": "Unlicense",
