@@ -1,10 +1,10 @@
+import { CommandInteraction } from 'discord.js';
 import capeUtils from '../utils/capes.js';
 import embedUtils from '../utils/embed.js';
 import uuidUtils from '../utils/uuid.js';
 import checkuser from '../utils/checkuser.js';
-import { CommandInteraction } from 'discord.js';
 
-module.exports = {
+export default {
   name: 'capes',
   description: 'Edit capes',
   options: [
