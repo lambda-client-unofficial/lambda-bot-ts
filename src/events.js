@@ -4,7 +4,7 @@ require('colors');
 module.exports = (client) => {
   const load = (dirs) => {
     const events = readdirSync(`${__dirname}/events/${dirs}/`).filter((d) => d.endsWith('js'));
-    events.forEach(file => {
+    events.forEach((file) => {
       const evt = require(`${__dirname}/events/${dirs}/${file}`);
       const eName = file.split('.')[0];
       client.on(eName, evt.bind(null, client));

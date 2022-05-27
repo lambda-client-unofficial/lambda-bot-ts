@@ -1,7 +1,7 @@
 const { EmbedBuilder, ActionRowBuilder, ButtonBuilder } = require('discord.js');
-const embedUtils = require('../utils/embed.js');
 const timestampToDate = require('timestamp-to-date');
-const { profile, names, textures } = require('../utils/minecraftProfile')
+const embedUtils = require('../utils/embed.js');
+const { profile, names, textures } = require('../utils/minecraftProfile');
 
 module.exports = {
   name: 'lookup',
@@ -27,13 +27,13 @@ module.exports = {
       switch (index.name) {
         case 'name': {
           const username = await interaction.options.getString('username');
-          const user = await profile(username)
+          const user = await profile(username);
 
           if (!user) return await interaction.reply({ embeds: [embedUtils.error('No user found.')] });
-          const _names = await names(user)
-          if(!_names) return await interaction.reply({ embeds: [embedUtils.error("Unknown error")]})
-          const _textures = await textures(user)
-          if(!_textures) return await interaction.reply({ embeds: [embedUtils.error("Unknown error")]})
+          const _names = await names(user);
+          if (!_names) return await interaction.reply({ embeds: [embedUtils.error('Unknown error')] });
+          const _textures = await textures(user);
+          if (!_textures) return await interaction.reply({ embeds: [embedUtils.error('Unknown error')] });
 
           const embed = new EmbedBuilder()
             .setTitle(`${username}'s Profile`)

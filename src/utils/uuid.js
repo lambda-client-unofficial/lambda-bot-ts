@@ -9,7 +9,7 @@ const format = (uuid) => {
 };
 const usernameToUUID = async (username) => {
   const axios = require('axios').default;
-  const uuid = await axios.get(`https://api.mojang.com/users/profiles/minecraft/${username}`).then(uuid => uuid.data.id).catch((e) => console.log(e.data));
+  const uuid = await axios.get(`https://api.mojang.com/users/profiles/minecraft/${username}`).then((uuid) => uuid.data.id).catch((e) => console.log(e.data));
   return uuid ?? false;
 };
 

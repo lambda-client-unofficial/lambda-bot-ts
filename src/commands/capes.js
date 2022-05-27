@@ -2,6 +2,7 @@ const capeUtils = require('../utils/capes.js');
 const embedUtils = require('../utils/embed.js');
 const uuidUtils = require('../utils/uuid.js');
 const checkuser = require('../utils/checkuser.js');
+
 module.exports = {
   name: 'capes',
   description: 'Edit capes',
@@ -73,8 +74,8 @@ module.exports = {
         }
         case 'add': {
           const minecraft_username = await interaction.options.getString('minecraft_username');
-          const user = await interaction.options.getString('user_id').split("'")[0]
-          if(!await checkuser(user)) return await interaction.reply({ embeds: [embedUtils.error('Invalid user')] });
+          const user = await interaction.options.getString('user_id').split("'")[0];
+          if (!await checkuser(user)) return await interaction.reply({ embeds: [embedUtils.error('Invalid user')] });
           const minecraft_uuid = await uuidUtils.usernameToUUID(minecraft_username);
           if (!minecraft_uuid) return await interaction.reply({ embeds: [embedUtils.error('Invalid username or nonexistent player')] });
           const addResult = await capeUtils.add(user, minecraft_uuid);
