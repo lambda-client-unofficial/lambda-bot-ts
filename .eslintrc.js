@@ -12,5 +12,12 @@ module.exports = {
   },
   rules: {
     'import/extensions': 'off',
+    'no-unused-vars': [
+      'error',
+      {
+        argsIgnorePattern: '^_',
+        varsIgnorePattern: '^_',
+      },
+    ],
   },
 };
