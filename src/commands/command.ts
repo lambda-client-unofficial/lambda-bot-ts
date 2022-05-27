@@ -1,10 +1,10 @@
-import { Client, Interaction } from 'discord.js';
+import { Client, CommandInteraction } from 'discord.js';
 
 interface Command {
   name: string;
   description: string;
   options: Option[];
-  run: (interaction: Interaction, client: Client) => Promise<void>;
+  run: (interaction: CommandInteraction, client: Client) => Promise<void>;
 }
 
 interface Option {
