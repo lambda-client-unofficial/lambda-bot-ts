@@ -16,8 +16,8 @@ const textures = async (name: string) => {
   fetch(`https://sessionserver.mojang.com/session/minecraft/profile/${name}`)
     .then((res) => res.json())
     .then((data: any) => {
-      const value = data.properties[0].value;
-      return JSON.parse(Buffer.from(value, 'base64').toString()).textures?.SKIN?.url
+      const { value } = data.properties[0];
+      return JSON.parse(Buffer.from(value, 'base64').toString()).textures?.SKIN?.url;
     })
     .catch((err) => err);
 };
