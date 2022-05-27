@@ -1,5 +1,7 @@
+const axios = require('axios').default;
+
 const format = (uuid) => {
-  if (typeof uuid !== 'string') throw 'Bad UUID';
+  if (typeof uuid !== 'string') throw Error('Bad UUID');
   const part1 = uuid.slice(0, 8);
   const part2 = uuid.slice(8, 12);
   const part3 = uuid.slice(12, 16);
@@ -8,8 +10,7 @@ const format = (uuid) => {
   return `${part1}-${part2}-${part3}-${part4}-${part5}`;
 };
 const usernameToUUID = async (username) => {
-  const axios = require('axios').default;
-  const uuid = await axios.get(`https://api.mojang.com/users/profiles/minecraft/${username}`).then((uuid) => uuid.data.id).catch((e) => console.log(e.data));
+  const uuid = await axios.get(`https://api.mojang.com/users/profiles/minecraft/${username}`).then((res) => res.data.id).catch((e) => (e));
   return uuid ?? false;
 };
 
