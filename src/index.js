@@ -21,6 +21,7 @@ client.commands = new Collection();
 client.slash = new Collection();
 
 client.on('ready', () => {
+  // eslint-disable-next-line no-console
   console.log(`Logged in as ${client.user.tag}!`);
   require('./slash')(client);
   require('./events')(client);
