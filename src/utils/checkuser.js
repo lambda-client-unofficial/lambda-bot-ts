@@ -5,7 +5,7 @@ const checkuser = async (id) => {
         headers: {
             authorization: "Bot " + process.env.TOKEN
         }
-    }).catch(err => err)
-    return !req instanceof Error ? true : false
+    }).then(req => req.data.id).catch(err => err)
+    return req instanceof Error ? false : true
 }
 module.exports = checkuser

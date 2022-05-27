@@ -17,7 +17,7 @@ module.exports = {
                 stargazers: plugin?.stargazers_count,
                 watchers: plugin?.watchers_count,
                 issues: `[Issues](${plugin?.issues_url})`,
-                url: `[Repo URL](${plugin?.html_url})`,
+                url: `[Repo URL](${plugin?.html_url}) ()`,
                 size: plugin?.size,
             });
         });

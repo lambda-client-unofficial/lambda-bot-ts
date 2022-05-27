@@ -17,13 +17,16 @@ const pull = async (overwrite = Boolean) => {
     path: capeRepo.path,
     ref: capeRepo.branch,
   }).catch(((e) => console.error(e)));
-  db.push('capes', Buffer.from(res.data.content, 'base64').toString());
+  JSON.parse(Buffer.from(res.data.content, 'base64').toString()).forEach(cape => {
+    db.push('capes', cape);
+  })
   db.sha_push(res.data.sha);
 };
 
 const push = async () => {
   const capes = await db.get('capes');
   const sha = await db.get('sha');
+  console.log(sha)
   await octokit.request('PUT /repos/{owner}/{repo}/contents/{path}', {
     owner: capeRepo.owner,
     repo: capeRepo.repo,
@@ -63,8 +66,10 @@ const add = async (discordId, uuid, type /* <-When more than CONTRIBUTOR*/) => {
     capes.push(template);
   } catch (e) {
     console.log(e);
+    return false
   }
-  db.push('capes', template).catch((e) => { console.error(`${e}`.red); return false })
+  db.push('capes', template).catch(() => { return false })
+  return true
 };
 
 const capeUtils = {

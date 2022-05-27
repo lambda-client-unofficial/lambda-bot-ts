@@ -1,6 +1,6 @@
 const uuidUtils = require('./uuid');
 
-const check = async (data = JSON) => {
+const check = async (data) => {
   const template = {
     id: data?.discordId ?? null,
     capes: [
