@@ -4,6 +4,8 @@ import { GatewayIntentBits } from 'discord-api-types/v10';
 import { readdirSync } from 'graceful-fs';
 import commands from './shared/commands';
 import logger from './utils/logger';
+import registerSlashCommands from './slash';
+import resgisterEvents from './events';
 
 const client = new Client({
   intents: [
@@ -15,8 +17,8 @@ const client = new Client({
 
 client.on('ready', () => {
   logger.log(`Logged in as ${client.user?.tag}!`);
-  require('./slash')(client);
-  require('./events')(client);
+  registerSlashCommands(client);
+  resgisterEvents(client);
 
   readdirSync(`${__dirname}/commands/`).map(async (cmd) => {
     try {
