@@ -10,7 +10,6 @@ const names = async name => {
 const textures = async name => {
     let req = await axios.get(`https://sessionserver.mojang.com/session/minecraft/profile/${name}`).then(textures => textures?.data?.properties[0]?.value).catch(textures => textures)
     const textures = JSON.parse(Buffer.from(req, 'base64').toString()).textures?.SKIN?.url
-    console.log(textures)
     return textures instanceof Error ? false : textures
 }
 const modules = {
