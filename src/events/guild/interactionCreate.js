@@ -1,4 +1,4 @@
-const humanizeDuration = require('humanize-duration');
+const ms = require('ms');
 const embedUtils = require('../../utils/embed');
 
 const Timeout = new Set();
@@ -10,7 +10,7 @@ module.exports = async (client, interaction) => {
   try {
     if (command.timeout) {
       if (Timeout.has(`${interaction.user.id}${command.name}`)) {
-        return await interaction.reply({ embeds: [embedUtils.error(`You need to wait **${humanizeDuration(command.timeout, { round: true })}** to use command again`)], ephemeral: true });
+        await interaction.reply({ embeds: [embedUtils.error(`You need to wait **${ms(command.timeout, { long: true })}** to use command again`)], ephemeral: true });
       }
     }
     command.run(interaction, client);
@@ -18,5 +18,7 @@ module.exports = async (client, interaction) => {
     setTimeout(() => {
       Timeout.delete(`${interaction.user.id}${command.name}`);
     }, command.timeout, clearTimeout());
-  } catch {}
+  } catch (e) {
+    await interaction.reply({ embeds: [embedUtils.error(`An error occured: ${e.toString()}`)] });
+  }
 };
