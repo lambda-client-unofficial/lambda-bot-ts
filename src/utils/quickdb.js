@@ -8,16 +8,16 @@ const init = async () => {
 
 const push = async (key, ...data) => {
   init();
-  const __ = [];
+  const array = [];
   data = JSON.parse(data);
-  for (const _ in data) {
-    if (!safecheck(data[_])) return false;
+  for (const i in data) {
+    if (!safecheck(data[i])) return false;
 
-    __.push(data[_]);
+    array.push(data[i]);
   }
-  db.set(key, __);
+  db.set(key, array);
 };
-const sha_push = async (data = '', safecheck = false, origin = '') => {
+const sha_push = async (data, safecheck = false, origin) => {
   if (data === '') throw 'Empty data';
   if (safecheck) if (sha1(origin) !== data) throw 'Content does not match the sha1 hash';
   db.set('sha', data);
@@ -25,13 +25,13 @@ const sha_push = async (data = '', safecheck = false, origin = '') => {
 
 const get = async (key = String) => {
   init();
-  const _ = await db.get(key);
-  return _ != null ? _ : false;
+  const data = await db.get(key);
+  return data != null ? data : false;
 };
 
-const UwU = {
+const modules = {
   push,
   get,
   sha_push,
 };
-module.exports = UwU;
+module.exports = modules;

@@ -22,10 +22,9 @@ const pull = async (overwrite = Boolean) => {
 };
 
 const push = async () => {
-  const _ = await db.get('capes');
-  console.log(_);
-  const __ = await db.get('sha');
-  const ___ = await octokit.request('PUT /repos/{owner}/{repo}/contents/{path}', {
+  const capes = await db.get('capes');
+  const sha = await db.get('sha');
+  await octokit.request('PUT /repos/{owner}/{repo}/contents/{path}', {
     owner: capeRepo.owner,
     repo: capeRepo.repo,
     path: capeRepo.path,
@@ -35,21 +34,21 @@ const push = async () => {
       name: 'Cape Bot',
       email: 'cape@lamb.da',
     },
-    content: Buffer.from(JSON.stringify(_)).toString('base64'),
-    sha: __,
+    content: Buffer.from(JSON.stringify(capes)).toString('base64'),
+    sha: sha,
   }).catch((e) => {
     console.log(e); return false;
   });
   return true;
 };
 
-const add = async (discordId, uuid, type) => {
-  const _ = await db.get('capes');
+const add = async (discordId, uuid, type /* <-When more than CONTRIBUTOR*/) => {
+  const capes = await db.get('capes');
   const template = {
     id: discordId,
     capes: [
       {
-        cape_uuid: Number(JSON.stringify(_.length + 1)),
+        cape_uuid: Number(JSON.stringify(capes.length + 1)),
         player_uuid: uuid,
         type: 'CONTRIBUTOR',
         color: {
@@ -61,14 +60,11 @@ const add = async (discordId, uuid, type) => {
     is_premium: true,
   };
   try {
-    _.push(template);
+    capes.push(template);
   } catch (e) {
     console.log(e);
   }
-  db.push('capes', template).catch((e) => {
-    console.log(e);
-  });
-  console.log(await db.get('capes')).catch((e) => {});
+  db.push('capes', template).catch((e) => { console.error(`${e}`.red); return false })
 };
 
 const capeUtils = {
