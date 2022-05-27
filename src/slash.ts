@@ -1,4 +1,4 @@
-import 'dotenv/config'
+import 'dotenv/config';
 import { REST } from '@discordjs/rest';
 import { Routes } from 'discord-api-types/v10';
 import logger from './utils/logger';
