@@ -1,35 +1,37 @@
-/* eslint-disable no-console */
-const { REST } = require('@discordjs/rest');
-const { Routes } = require('discord-api-types/v10');
-const { readdirSync } = require('graceful-fs');
-const path = require('path');
-require('colors');
+import 'dotenv/config'
+import { REST } from '@discordjs/rest';
+import { Routes } from 'discord-api-types/v10';
+import logger from './utils/logger';
+import commands from './shared/commands';
 
-const commands: any[] = [];
+if (!process.env.TOKEN) {
+  logger.error('[Discord API] No token found.');
+  throw Error('No token found.');
+}
+
 const rest = new REST({ version: '10' }).setToken(process.env.TOKEN);
 
-readdirSync(`${__dirname}/commands/`).map(async (cmd) => {
-  // eslint-disable-next-line import/no-dynamic-require, global-require
-  commands.push(require(path.join(__dirname, `/commands/${cmd}`)));
-});
-
-const register = async (client) => {
+const registerSlashCommands = async (client) => {
   try {
-    console.log('[Discord API] Started refreshing application (/) commands.'.yellow);
+    logger.log('[Discord API] Started refreshing application (/) commands.');
     client.guilds.cache.forEach(async (guild) => {
       try {
+        if (!process.env.BOT_ID) {
+          logger.error('[Discord API] No bot ID found.');
+          throw Error('No bot ID found.');
+        }
         await rest.put(
           Routes.applicationGuildCommands(process.env.BOT_ID, guild.id),
-          { body: commands },
+          { body: [...commands.values()] },
         );
       } catch (e) {
-        console.log(e);
+        logger.error(`[Discord API] Unable to refresh application (/) commands for ${guild.name}: ${e}`);
       }
     });
-    console.log('[Discord API] Successfully reloaded application (/) commands.'.green);
-  } catch (error) {
-    console.log(error);
+    logger.log('[Discord API] Successfully reloaded application (/) commands.');
+  } catch (e) {
+    logger.error(`[Discord API] Failed to reload application (/) commands: ${e}`);
   }
 };
 
-export default register;
+export default registerSlashCommands;
