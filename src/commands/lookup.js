@@ -23,17 +23,17 @@ module.exports = {
   ],
 
   run: async (interaction) => {
-    for (const index of interaction.options.data) {
+    interaction.options.data.forEach(async (index) => {
       switch (index.name) {
         case 'name': {
           const username = await interaction.options.getString('username');
           const user = await profile(username);
 
-          if (!user) return await interaction.reply({ embeds: [embedUtils.error('No user found.')] });
-          const _names = await names(user);
-          if (!_names) return await interaction.reply({ embeds: [embedUtils.error('Unknown error')] });
-          const _textures = await textures(user);
-          if (!_textures) return await interaction.reply({ embeds: [embedUtils.error('Unknown error')] });
+          if (!user) return interaction.reply({ embeds: [embedUtils.error('No user found.')] });
+          const namesRes = await names(user);
+          if (!namesRes) return interaction.reply({ embeds: [embedUtils.error('Unknown error')] });
+          const texturesRes = await textures(user);
+          if (!texturesRes) return interaction.reply({ embeds: [embedUtils.error('Unknown error')] });
 
           const embed = new EmbedBuilder()
             .setTitle(`${username}'s Profile`)
@@ -41,17 +41,17 @@ module.exports = {
             .setImage(`https://crafatar.com/renders/body/${user}?overlay`)
             .setColor('Blue');
           try {
-            _names.forEach((name) => {
+            namesRes.forEach((name) => {
               let time = timestampToDate(name.changedToAt, 'yyyy-MM-dd HH:mm:ss'); if (time.toLowerCase().includes('nan')) time = 'First Appeared Name';
               embed.addFields([{ name: name.name ?? 'Unknown', value: time ?? 'First Appeared Name' }]);
             });
           } catch (e) {
-            console.log(e);
+            return e;
           }
           const row = new ActionRowBuilder().addComponents([
             new ButtonBuilder()
               .setStyle('Link')
-              .setURL(_textures)
+              .setURL(texturesRes)
               .setLabel('Player skin'),
           ]).addComponents([
             new ButtonBuilder()
@@ -59,9 +59,11 @@ module.exports = {
               .setURL(`https://namemc.com/search?q=${username}`)
               .setLabel('NameMC'),
           ]);
-          return await interaction.reply({ embeds: [embed], components: [row] });
+          return interaction.reply({ embeds: [embed], components: [row] });
         }
+        default:
+          return interaction.reply({ embeds: [embedUtils.error('Please choose something.')] });
       }
-    }
+    });
   },
 };

@@ -1,5 +1,4 @@
 const { EmbedBuilder } = require('discord.js');
-const axios = require('axios').default;
 const size = require('../utils/bytes');
 const { listPlugins } = require('../utils/plugins');
 
@@ -34,6 +33,6 @@ module.exports = {
         inline: true,
       }]);
     });
-    return await interaction.reply({ embeds: [pluginEmbed] });
+    return interaction.reply({ embeds: [pluginEmbed] });
   },
 };
