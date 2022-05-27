@@ -1,7 +1,7 @@
+const { Octokit } = require('@octokit/core');
 const uuidUtils = require('./uuid.js');
 require('dotenv').config();
-const { Octokit } = require('@octokit/core');
-const capeRepo = require('../config');
+const { capeRepo } = require('../../config.js');
 const db = require('./quickdb');
 
 const octokit = new Octokit({
