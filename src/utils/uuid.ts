@@ -1,6 +1,6 @@
-const axios = require('axios').default;
+import fetch from 'node-fetch';
 
-const format = (uuid) => {
+const format = (uuid: string) => {
   if (typeof uuid !== 'string') throw Error('Bad UUID');
   const part1 = uuid.slice(0, 8);
   const part2 = uuid.slice(8, 12);
@@ -9,9 +9,11 @@ const format = (uuid) => {
   const part5 = uuid.slice(20, 32);
   return `${part1}-${part2}-${part3}-${part4}-${part5}`;
 };
-const usernameToUUID = async (username) => {
-  const uuid = await axios.get(`https://api.mojang.com/users/profiles/minecraft/${username}`).then((res) => res.data.id).catch((e) => (e));
-  return uuid ?? false;
+const usernameToUUID = (username: string) => {
+  fetch(`https://api.mojang.com/users/profiles/minecraft/${username}`)
+    .then((res) => res.json())
+    .then((data) => data)
+    .catch((e) => (e));
 };
 
 const uuidUtils = {
@@ -19,4 +21,4 @@ const uuidUtils = {
   usernameToUUID,
 };
 
-module.exports = uuidUtils;
+export default uuidUtils;
