@@ -1,6 +1,6 @@
 const { Octokit } = require('@octokit/core');
 require('dotenv').config();
-const { capeRepo } = require('../../config');
+const { capeRepo } = require('../../config.js');
 const db = require('./quickdb');
 
 const octokit = new Octokit({
