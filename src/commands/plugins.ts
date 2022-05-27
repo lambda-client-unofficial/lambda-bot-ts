@@ -1,13 +1,14 @@
-const { EmbedBuilder } = require('discord.js');
-const size = require('../utils/bytes');
-const { listPlugins } = require('../utils/plugins');
+import ms from 'ms';
+import { Client, CommandInteraction, EmbedBuilder } from 'discord.js';
+import size from '../utils/bytes';
+import { listPlugins } from '../utils/plugins';
 
 module.exports = {
   name: 'plugins',
   description: 'Check plugin list',
-  timeout: 300000,
+  timeout: ms('30s'),
 
-  run: async (interaction) => {
+  run: async (interaction: CommandInteraction, _client: Client) => {
     const pluginList = [];
     const plugins = (await listPlugins()).data;
     plugins.forEach((plugin) => {
