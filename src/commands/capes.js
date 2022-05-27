@@ -59,7 +59,7 @@ module.exports = {
   ],
 
   run: async (interaction) => {
-    for (const index of interaction.options.data) {
+    interaction.options.data.forEach(async (index) => {
       switch (index.name) {
         case 'pull': {
           const isForced = interaction.options.getBoolean('force') ?? false;
@@ -73,17 +73,17 @@ module.exports = {
           return interaction.reply({ embeds: [embedUtils.success('Pushed to remote.')] });
         }
         case 'add': {
-          const minecraft_username = await interaction.options.getString('minecraft_username');
+          const minecraftUsername = await interaction.options.getString('minecraft_username');
           const user = await interaction.options.getString('user_id').split("'")[0];
-          if (!await checkuser(user)) return await interaction.reply({ embeds: [embedUtils.error('Invalid user')] });
-          const minecraft_uuid = await uuidUtils.usernameToUUID(minecraft_username);
-          if (!minecraft_uuid) return await interaction.reply({ embeds: [embedUtils.error('Invalid username or nonexistent player')] });
-          const addResult = await capeUtils.add(user, minecraft_uuid);
+          if (!await checkuser(user)) return interaction.reply({ embeds: [embedUtils.error('Invalid user')] });
+          const minecraftUUID = await uuidUtils.usernameToUUID(minecraftUsername);
+          if (!minecraftUUID) return interaction.reply({ embeds: [embedUtils.error('Invalid username or nonexistent player')] });
+          const addResult = await capeUtils.add(user, minecraftUUID);
           if (!addResult) return interaction.reply({ embeds: [embedUtils.error('No local data found. Please pull first.')] });
-          return interaction.reply({ embeds: [embedUtils.success(`Added <@${user}>, Info: \`\`\`Username: ${minecraft_username}\nUUID: ${minecraft_uuid}\`\`\``)] });
+          return interaction.reply({ embeds: [embedUtils.success(`Added <@${user}>, Info: \`\`\`Username: ${minecraftUsername}\nUUID: ${minecraftUUID}\`\`\``)] });
         }
         default: return interaction.reply({ embeds: [embedUtils.error('Please choose something.')] });
       }
-    }
+    });
   },
 };
