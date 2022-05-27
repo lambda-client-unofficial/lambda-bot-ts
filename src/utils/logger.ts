@@ -17,6 +17,6 @@ const logger = {
   log,
   warn,
   error,
-}
+};
 
 export default logger;
