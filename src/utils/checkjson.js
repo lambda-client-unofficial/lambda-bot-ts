@@ -16,10 +16,10 @@ const check = async (data) => {
     is_premium: data?.is_premium ?? null,
   };
   if (JSON.stringify(template).indexOf('null') !== -1) {
-    return template == JSON ? template : false;
+    return template === JSON ? template : false;
   }
 
-  throw 'Invalid JSON Body';
+  throw Error('Invalid JSON Body');
 };
 
 module.exports = check;
