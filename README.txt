@@ -1,4 +1,4 @@
-Create a config.js file with a following content in the project directory:
+Create a config.ts file with a following content in the project directory:
 
     export const capeRepo = {
         owner: '',                    // the owner of the cape repository
