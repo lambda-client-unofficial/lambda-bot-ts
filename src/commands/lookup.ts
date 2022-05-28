@@ -1,4 +1,9 @@
-import { CommandInteraction, EmbedBuilder, ActionRowBuilder, ButtonBuilder } from 'discord.js';
+import {
+  CommandInteraction,
+  EmbedBuilder,
+  ActionRowBuilder,
+  ButtonBuilder,
+} from 'discord.js';
 import embedUtils from '../utils/embed.js';
 import minecraftUtils from '../utils/minecraftProfile';
 
@@ -25,8 +30,11 @@ export default {
     interaction.options.data.forEach(async (index) => {
       switch (index.name) {
         case 'name': {
-          const username = await interaction.options.get('username');
-          const user = await minecraftUtils.profile(username);
+          const username = interaction.options.get('username');
+          let user;
+          if (typeof username === string) {
+            user = await minecraftUtils.profile(username);
+          }
 
           if (!user) return interaction.reply({ embeds: [embedUtils.error('No user found.')] });
           const namesRes = await minecraftUtils.names(user);
