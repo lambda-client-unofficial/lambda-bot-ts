@@ -21,6 +21,7 @@ const textures = async (name: string) => {
     })
     .catch((err) => err);
 };
+
 const minecraftUtils = {
   profile,
   names,

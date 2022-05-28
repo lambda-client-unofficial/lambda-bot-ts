@@ -1,9 +1,8 @@
-const { EmbedBuilder, ActionRowBuilder, ButtonBuilder } = require('discord.js');
-const timestampToDate = require('timestamp-to-date');
-const embedUtils = require('../utils/embed.js');
-const { profile, names, textures } = require('../utils/minecraftProfile');
+import { CommandInteraction, EmbedBuilder, ActionRowBuilder, ButtonBuilder } from 'discord.js';
+import embedUtils from '../utils/embed.js';
+import minecraftUtils from '../utils/minecraftProfile';
 
-module.exports = {
+export default {
   name: 'lookup',
   description: 'Lookup minecraft users',
   options: [
@@ -22,17 +21,17 @@ module.exports = {
 
   ],
 
-  run: async (interaction) => {
+  run: async (interaction: CommandInteraction) => {
     interaction.options.data.forEach(async (index) => {
       switch (index.name) {
         case 'name': {
-          const username = await interaction.options.getString('username');
-          const user = await profile(username);
+          const username = await interaction.options.get('username');
+          const user = await minecraftUtils.profile(username);
 
           if (!user) return interaction.reply({ embeds: [embedUtils.error('No user found.')] });
-          const namesRes = await names(user);
+          const namesRes = await minecraftUtils.names(user);
           if (!namesRes) return interaction.reply({ embeds: [embedUtils.error('Unknown error')] });
-          const texturesRes = await textures(user);
+          const texturesRes = await minecraftUtils.textures(user);
           if (!texturesRes) return interaction.reply({ embeds: [embedUtils.error('Unknown error')] });
 
           const embed = new EmbedBuilder()
