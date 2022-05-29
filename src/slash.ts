@@ -3,7 +3,7 @@ import { REST } from '@discordjs/rest';
 import { Routes } from 'discord-api-types/v10';
 import { Client } from 'discord.js';
 import logger from './utils/logger';
-import { commands, scanCommands } from './shared/commands';
+import { commands, scanCommands } from './commandsLoader';
 
 if (!process.env.TOKEN) {
   logger.error('[Discord API] No token found.');
@@ -23,7 +23,7 @@ const registerSlashCommands = async (client: Client) => {
         }
         await rest.put(
           Routes.applicationGuildCommands(process.env.BOT_ID, guild.id),
-          { body: [...commands.values()] },
+          { body: commands },
         );
       } catch (e) {
         logger.error(`[Discord API] Unable to refresh application (/) commands for ${guild.name}: ${e}`);

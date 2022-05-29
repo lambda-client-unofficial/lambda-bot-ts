@@ -1,8 +1,8 @@
-import { CommandInteraction } from 'discord.js';
+import { CommandInteraction, CommandInteractionOptionResolver, CommandInteractionResolvedData } from 'discord.js';
 import capeUtils from '../utils/capes.js';
 import embedUtils from '../utils/embed.js';
 import uuidUtils from '../utils/uuid.js';
-import checkuser from '../utils/checkuser.js';
+import("colors")
 
 export default {
   name: 'capes',
@@ -60,12 +60,13 @@ export default {
   ],
 
   run: async (interaction: CommandInteraction) => {
+    if(!interaction.isChatInputCommand()) return
     interaction.options.data.forEach(async (index) => {
       switch (index.name) {
         case 'pull': {
           const isForced = interaction.options.get('force') ?? false;
-          const pullResult = await capeUtils.pull(isForced);
-          if (!pullResult && !isForced) return interaction.reply({ embeds: [embedUtils.error('Add `force:true` in the options to override local data.')] });
+          const pullResult = await capeUtils.pull(/*isForced*/);
+          //if (!pullResult && !isForced) return interaction.reply({ embeds: [embedUtils.error('Add `force:true` in the options to override local data.')] });
           return interaction.reply({ embeds: [embedUtils.success('Pulled!')] });
         }
         case 'push': {
@@ -74,10 +75,10 @@ export default {
           return interaction.reply({ embeds: [embedUtils.success('Pushed to remote.')] });
         }
         case 'add': {
-          const minecraftUsername = await interaction.options.getString('minecraft_username');
-          const user = await interaction.options.getString('user_id').split("'")[0];
-          if (!await checkuser(user)) return interaction.reply({ embeds: [embedUtils.error('Invalid user')] });
-          const minecraftUUID = await uuidUtils.usernameToUUID(minecraftUsername);
+          const minecraftUsername = interaction.options.getString('minecraft_username');
+          const user = interaction.options.getString('user_id')!.split("'")[0];
+          //if (!await checkuser(user)) return interaction.reply({ embeds: [embedUtils.error('Invalid user')] }); //need fix
+          const minecraftUUID = await uuidUtils.usernameToUUID(minecraftUsername as string);
           if (!minecraftUUID) return interaction.reply({ embeds: [embedUtils.error('Invalid username or nonexistent player')] });
           const addResult = await capeUtils.add(user, minecraftUUID);
           if (!addResult) return interaction.reply({ embeds: [embedUtils.error('No local data found. Please pull first.')] });

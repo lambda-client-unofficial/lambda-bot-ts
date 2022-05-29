@@ -1,6 +1,6 @@
 import { Client, CommandInteraction } from 'discord.js';
 import ms from 'ms';
-import { commands } from '../../shared/commands';
+import { commands } from '../../commandsLoader';
 import embedUtils from '../../utils/embed';
 
 const Timeout = new Set();
@@ -20,7 +20,7 @@ export default async (client: Client, interaction: CommandInteraction) => {
     setTimeout(() => {
       Timeout.delete(`${interaction.user.id}${command.name}`);
     }, command.timeout, clearTimeout());
-  } catch (e) {
+  } catch (e: any) {
     await interaction.reply({ embeds: [embedUtils.error(`An error occured: ${e.toString()}`)] });
   }
 };
