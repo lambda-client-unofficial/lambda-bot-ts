@@ -2,6 +2,7 @@ import { Octokit } from 'octokit';
 import 'dotenv/config';
 import { capeRepo } from '../../config';
 import db from './quickdb';
+import { Snowflake } from "discord.js";
 
 const octokit = new Octokit({
   auth: process.env.GITHUB_TOKEN,
@@ -17,7 +18,7 @@ const pull = async () => {
   JSON.parse(Buffer.from(res.data.content, 'base64').toString()).forEach((cape: any) => {
     db.push('capes', cape);
   });
-  db.sha_push(res.data.sha);
+  db.shaPush(res.data.sha);
 };
 
 const push = async () => {
@@ -39,7 +40,7 @@ const push = async () => {
   return true;
 };
 
-const add = async (discordId: number, uuid: string) => {
+const add = async (discordId: Snowflake, uuid: string) => {
   const capes = await db.get('capes');
   const template = {
     id: discordId,

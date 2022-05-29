@@ -1,4 +1,4 @@
-import fetch from 'node-fetch';
+import axios from 'axios';
 
 const format = (uuid: string) => {
   if (typeof uuid !== 'string') throw Error('Bad UUID');
@@ -9,11 +9,9 @@ const format = (uuid: string) => {
   const part5 = uuid.slice(20, 32);
   return `${part1}-${part2}-${part3}-${part4}-${part5}`;
 };
-const usernameToUUID = (username: string) => {
-  fetch(`https://api.mojang.com/users/profiles/minecraft/${username}`)
-    .then((res) => res.json())
-    .then((data) => data)
-    .catch((e) => (e));
+const usernameToUUID = async(username: string) => {
+  const uuid: string = await axios.get(`https://api.mojang.com/users/profiles/minecraft/${username}`).then((uuid: { data: { id: any; }; }) => uuid.data.id).catch((e: { data: any; }) => console.log(e.data));
+  return uuid ?? false;
 };
 
 const uuidUtils = {

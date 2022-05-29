@@ -14,10 +14,10 @@ const push = async (key: any, ...data: any) => {
   db.set(key, array);
 };
 
-const shaPush = async (data: any, origin: any, check = false) => {
+const shaPush = async (data: any, origin?: String, check?: Boolean) => {
   init();
   if (data === '') throw Error('Empty data');
-  if (check) if (sha1(origin) !== data) throw Error('Content does not match the sha1 hash');
+  if (check) if (sha1(origin as string) !== data) throw Error('Content does not match the sha1 hash');
   db.set('sha', data);
 };
 
