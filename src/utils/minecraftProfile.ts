@@ -1,22 +1,29 @@
-import axios from 'axios';  
+import fetch from 'node-fetch';
 
-const profile = async (name: string) => {
-  const user = await axios.get(`https://api.mojang.com/users/profiles/minecraft/${name}`).then((user) => user?.data?.id).catch((user) => user);
-  return user instanceof Error ? false : user;
-};
-const names = async (name: String) => {
-  const names = await axios.get(`https://api.mojang.com/user/profiles/${name}/names`).then((names) => names?.data).catch((names) => names);
-  return names instanceof Error ? false : names;
-};
-const textures = async (name: String) => {
-  const req = await axios.get(`https://sessionserver.mojang.com/session/minecraft/profile/${name}`).then((textures) => textures?.data?.properties[0]?.value).catch((textures) => textures);
-  const textures = JSON.parse(Buffer.from(req, 'base64').toString()).textures?.SKIN?.url;
-  return textures instanceof Error ? false : textures;
-};
+function profile(name: string) {
+  fetch(`https://api.mojang.com/users/profiles/minecraft/${name}`)
+    .then((res) => res.json())
+    .then((data) => data)
+    .catch((_err) => false);
+}
+
+function nameHistory(uuid: string) {
+  fetch(`https://api.mojang.com/user/profiles/${uuid}/names`)
+    .then((res) => res.json())
+    .then((data) => data)
+    .catch((_err) => false);
+}
+
+function textures(uuid: string) {
+  fetch(`https://sessionserver.mojang.com/session/minecraft/profile/${uuid}`)
+    .then((res) => res.json())
+    .then((data) => data)
+    .catch((_err) => false);
+}
 
 const minecraftUtils = {
   profile,
-  names,
+  nameHistory,
   textures,
 };
 
