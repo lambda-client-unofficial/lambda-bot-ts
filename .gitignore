@@ -6,3 +6,5 @@ json.sqlite
 .env
 config.js
 build/
+package-lock.json
+yarn.lock
