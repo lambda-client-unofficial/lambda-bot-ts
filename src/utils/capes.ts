@@ -1,30 +1,38 @@
 import { Octokit } from 'octokit';
 import 'dotenv/config';
+import { Snowflake } from 'discord.js';
+import fs from 'graceful-fs';
 import { capeRepo } from '../../config';
-import db from './quickdb';
-import { Snowflake } from "discord.js";
 
 const octokit = new Octokit({
   auth: process.env.GITHUB_TOKEN,
 });
 
-const pull = async () => {
-  const res = await octokit.request('GET /repos/{owner}/{repo}/contents/{path}', {
+function pull() {
+  octokit.request('GET /repos/{owner}/{repo}/contents/{path}', {
     owner: capeRepo.owner,
     repo: capeRepo.repo,
     path: capeRepo.path,
     ref: capeRepo.branch,
-  }).catch(((e) => (e)));
-  JSON.parse(Buffer.from(res.data.content, 'base64').toString()).forEach((cape: any) => {
-    db.push('capes', cape);
-  });
-  db.shaPush(res.data.sha);
-};
+  })
+    .then((res) => {
+      const data = res.data as any;
+      if (fs.existsSync('../capes.json') && Buffer.from((res.data as any).content, 'base64') !== fs.readFileSync('../capes.json')) {
+        throw Error('Conflict detected in capes.json');
+      }
+      fs.writeFileSync('../capes.json', Buffer.from(data.content, 'base64'));
+      fs.writeFileSync('../capes.json.shasum', data.sha);
+    });
+}
 
-const push = async () => {
-  const capes = await db.get('capes');
-  const sha = await db.get('sha');
-  await octokit.request('PUT /repos/{owner}/{repo}/contents/{path}', {
+function push() {
+  if (!fs.existsSync('../capes.json')) {
+    throw Error('File does not exist');
+  }
+  const data = fs.readFileSync('../capes.json');
+  const sha = fs.readFileSync('../capes.json.shasum', 'utf8');
+
+  octokit.request('PUT /repos/{owner}/{repo}/contents/{path}', {
     owner: capeRepo.owner,
     repo: capeRepo.repo,
     path: capeRepo.path,
@@ -34,14 +42,13 @@ const push = async () => {
       name: 'Cape Bot',
       email: 'cape@lamb.da',
     },
-    content: Buffer.from(JSON.stringify(capes)).toString('base64'),
+    content: Buffer.from(JSON.stringify(data)).toString('base64'),
     sha,
   }).catch((e) => (e));
-  return true;
-};
+}
 
-const add = async (discordId: Snowflake, uuid: string) => {
-  const capes = await db.get('capes');
+function add(discordId: number, uuid: string) {
+  const capes = JSON.parse(fs.readFileSync('../capes.json', 'utf8'));
   const template = {
     id: discordId,
     capes: [
@@ -57,14 +64,9 @@ const add = async (discordId: Snowflake, uuid: string) => {
     ],
     is_premium: true,
   };
-  try {
-    capes.push(template);
-  } catch (e) {
-    return e;
-  }
-  db.push('capes', template).catch((e: any) => e);
-  return true;
-};
+  capes.push(template);
+  fs.writeFileSync('../capes.json', JSON.stringify(capes));
+}
 
 const capeUtils = {
   pull,
