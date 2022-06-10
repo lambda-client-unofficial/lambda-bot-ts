@@ -1,10 +1,7 @@
 import ms from 'ms';
 import { Client, CommandInteraction, EmbedBuilder } from 'discord.js';
-import size from '../utils/bytes';
 import { Octokit } from 'octokit';
-const octokit = new Octokit({
-  auth: process.env.GITHUB_TOKEN,
-});
+import size from '../utils/bytes';
 
 export default {
   name: 'plugins',
@@ -14,7 +11,7 @@ export default {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   run: async (interaction: CommandInteraction, _client: Client) => {
     const pluginList: { name: any; stargazers: any; watchers: any; issues: string; url: string; size: any; }[] = [];
-    /*const plugins: { name: any; stargazers: any; watchers: any; issues: string; url: string; size: any; }[] = await octokit.request('GET /orgs/{org}/repos', { org: 'lambda-plugins' }) // need fix
+    /* const plugins: { name: any; stargazers: any; watchers: any; issues: string; url: string; size: any; }[] = await octokit.request('GET /orgs/{org}/repos', { org: 'lambda-plugins' }) // need fix
     plugins.forEach((plugin: { name: any; stargazers: any; watchers: any; issues: string; url: string; size: any; }[]) => {
       pluginList.push({
         name: plugin?.name,
@@ -24,7 +21,7 @@ export default {
         url: `[Repo URL](${plugin?.html_url}) ()`,
         size: plugin?.size,
       });
-    });*/
+    }); */
     const pluginEmbed = new EmbedBuilder().setTitle('Plugins Informations');
     pluginList.forEach((plugin) => {
       pluginEmbed.addFields([{

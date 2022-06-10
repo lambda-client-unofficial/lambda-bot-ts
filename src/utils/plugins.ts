@@ -5,8 +5,8 @@ const octokit = new Octokit({
 });
 
 const listPlugins = async() => { 
-  const data = await octokit.request('GET /orgs/{org}/repos', { org: 'lambda-plugins' })
-  return data
+  const data = await octokit.request('GET /orgs/{org}/repos', { org: 'lambda-plugins' });
+  return data;
 };
 
 const pluginUtils = {

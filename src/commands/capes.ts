@@ -1,8 +1,9 @@
-import { CommandInteraction, CommandInteractionOptionResolver, CommandInteractionResolvedData } from 'discord.js';
+import { CommandInteraction } from 'discord.js';
 import capeUtils from '../utils/capes.js';
 import embedUtils from '../utils/embed.js';
 import uuidUtils from '../utils/uuid.js';
-import("colors")
+
+import('colors');
 
 export default {
   name: 'capes',
@@ -60,13 +61,13 @@ export default {
   ],
 
   run: async (interaction: CommandInteraction) => {
-    if(!interaction.isChatInputCommand()) return
+    if (!interaction.isChatInputCommand()) return;
     interaction.options.data.forEach(async (index) => {
       switch (index.name) {
         case 'pull': {
-          const isForced = interaction.options.get('force') ?? false;
-          const pullResult = await capeUtils.pull(/*isForced*/);
-          //if (!pullResult && !isForced) return interaction.reply({ embeds: [embedUtils.error('Add `force:true` in the options to override local data.')] });
+          // const isForced = interaction.options.get('force') ?? false;
+          // const pullResult = await capeUtils.pull(/* isForced */);
+          // if (!pullResult && !isForced) return interaction.reply({ embeds: [embedUtils.error('Add `force:true` in the options to override local data.')] });
           return interaction.reply({ embeds: [embedUtils.success('Pulled!')] });
         }
         case 'push': {
@@ -77,7 +78,7 @@ export default {
         case 'add': {
           const minecraftUsername = interaction.options.getString('minecraft_username');
           const user = interaction.options.getString('user_id')!.split("'")[0];
-          //if (!await checkuser(user)) return interaction.reply({ embeds: [embedUtils.error('Invalid user')] }); //need fix
+          // if (!await checkuser(user)) return interaction.reply({ embeds: [embedUtils.error('Invalid user')] }); //need fix
           const minecraftUUID = await uuidUtils.usernameToUUID(minecraftUsername as string);
           if (!minecraftUUID) return interaction.reply({ embeds: [embedUtils.error('Invalid username or nonexistent player')] });
           const addResult = await capeUtils.add(user, minecraftUUID);

@@ -32,8 +32,8 @@ export default {
     interaction.options.data.forEach(async (index) => {
       switch (index.name) {
         case 'name': {
-          const username = interaction.options.get("username") as unknown; //need fix
-          let user = await minecraftUtils.profile(username as any); //no need to check if the type is set to string bruh
+          const username = interaction.options.get('username') as unknown; // need fix
+          const user = await minecraftUtils.profile(username as any); // no need to check if the type is set to string bruh
           if (!user) return interaction.reply({ embeds: [embedUtils.error('No user found.')] });
           const namesRes = await minecraftUtils.names(user);
           if (!namesRes) return interaction.reply({ embeds: [embedUtils.error('Unknown error')] });
@@ -59,12 +59,12 @@ export default {
               .setURL(texturesRes)
               .setLabel('Player skin'),
           ]).addComponents([
-            new ButtonBuilder()            
+            new ButtonBuilder()
               .setStyle(ButtonStyle.Link)
               .setURL(`https://namemc.com/search?q=${username}`)
               .setLabel('NameMC'),
           ]);
-          return interaction.reply({ embeds: [embed], components: [row as any] }); //need fix
+          return interaction.reply({ embeds: [embed], components: [row as any] }); // need fix
         }
         default:
           return interaction.reply({ embeds: [embedUtils.error('Please choose something.')] });
@@ -72,4 +72,3 @@ export default {
     });
   },
 };
-
