@@ -1,6 +1,5 @@
 import ms from 'ms';
 import { Client, CommandInteraction, EmbedBuilder } from 'discord.js';
-import { Octokit } from 'octokit';
 import size from '../utils/bytes';
 
 export default {
@@ -27,7 +26,7 @@ export default {
       pluginEmbed.addFields([{
         name: plugin.name,
         value:
-                    `Stargazers: ${plugin.stargazers}\n
+          `Stargazers: ${plugin.stargazers}\n
                 Watchers: ${plugin.watchers}\n
                 Issues: ${plugin.issues}\n
                 Size: ${size(plugin.size)}\n

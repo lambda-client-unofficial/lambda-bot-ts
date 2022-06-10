@@ -1,6 +1,5 @@
 import { Octokit } from 'octokit';
 import 'dotenv/config';
-import { Snowflake } from 'discord.js';
 import fs from 'graceful-fs';
 import { capeRepo } from '../../config';
 
