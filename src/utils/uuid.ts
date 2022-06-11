@@ -13,9 +13,9 @@ const format = (uuid: string) => {
 function usernameToUUID(username: string): string | undefined {
   fetch(`https://api.mojang.com/users/profiles/minecraft/${username}`)
     .then((res) => res.json())
-    .then((data: any) => data.data.id)
+    .then((data: any) => data.data.id);
   return undefined;
-};
+}
 
 const uuidUtils = {
   format,

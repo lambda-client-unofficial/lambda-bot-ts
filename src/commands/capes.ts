@@ -69,7 +69,7 @@ export default {
           try {
             capeUtils.pull({ forced });
           } catch (e: any) {
-            interaction.reply({ embeds: [embedUtils.error(e.toString())] })
+            interaction.reply({ embeds: [embedUtils.error(e.toString())] });
           }
           return interaction.reply({ embeds: [embedUtils.success(`${forced ? 'Force' : ''}Pulled!`)] });
         }
@@ -78,13 +78,13 @@ export default {
             const result = capeUtils.push();
             console.log(result);
           } catch (e: any) {
-            return interaction.reply({ embeds: [embedUtils.error(e.toString())] })
+            return interaction.reply({ embeds: [embedUtils.error(e.toString())] });
           }
           return interaction.reply({ embeds: [embedUtils.success('Pushed to remote.')] });
         }
         case 'add': {
           const minecraftUsername = interaction.options.getString('minecraft_username');
-          if (!minecraftUsername) return interaction.reply({ embeds: [embedUtils.error('Please provide a minecraft name.')] })
+          if (!minecraftUsername) return interaction.reply({ embeds: [embedUtils.error('Please provide a minecraft name.')] });
           const user = interaction.options.getString('user_id')!.split("'")[0];
           const minecraftUUID = uuidUtils.usernameToUUID(minecraftUsername);
           if (!minecraftUUID) return interaction.reply({ embeds: [embedUtils.error('Invalid username or nonexistent player')] });

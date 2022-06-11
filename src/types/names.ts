@@ -1,4 +1,4 @@
-type Names = Root2[]
+type Names = Root2[];
 
 interface Root2 {
   name: string
@@ -6,4 +6,3 @@ interface Root2 {
 }
 
 export default Names;
-
