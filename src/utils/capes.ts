@@ -7,7 +7,7 @@ const octokit = new Octokit({
   auth: process.env.GITHUB_TOKEN,
 });
 
-function pull() {
+function pull(options?: { forced: boolean }) {
   octokit.request('GET /repos/{owner}/{repo}/contents/{path}', {
     owner: capeRepo.owner,
     repo: capeRepo.repo,
@@ -17,6 +17,7 @@ function pull() {
     .then((res) => {
       const data = res.data as any;
       if (fs.existsSync('../capes.json') && Buffer.from((res.data as any).content, 'base64') !== fs.readFileSync('../capes.json')) {
+        if (options?.forced) return;
         throw Error('Conflict detected in capes.json');
       }
       fs.writeFileSync('../capes.json', Buffer.from(data.content, 'base64'));
@@ -28,7 +29,7 @@ function push() {
   if (!fs.existsSync('../capes.json')) {
     throw Error('File does not exist');
   }
-  const data = fs.readFileSync('../capes.json');
+  const data = fs.readFileSync('../capes.json', 'utf8');
   const sha = fs.readFileSync('../capes.json.shasum', 'utf8');
 
   octokit.request('PUT /repos/{owner}/{repo}/contents/{path}', {
@@ -43,7 +44,7 @@ function push() {
     },
     content: Buffer.from(JSON.stringify(data)).toString('base64'),
     sha,
-  }).catch((e) => (e));
+  }).then((res) => res.data).catch((e) => e);
 }
 
 function add(discordId: number, uuid: string) {

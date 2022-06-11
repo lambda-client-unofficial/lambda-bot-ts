@@ -65,10 +65,13 @@ export default {
     interaction.options.data.forEach(async (index) => {
       switch (index.name) {
         case 'pull': {
-          // const isForced = interaction.options.get('force') ?? false;
-          // const pullResult = await capeUtils.pull(/* isForced */);
-          // if (!pullResult && !isForced) return interaction.reply({ embeds: [embedUtils.error('Add `force:true` in the options to override local data.')] });
-          return interaction.reply({ embeds: [embedUtils.success('Pulled!')] });
+          const forced = interaction.options.getBoolean('force') ?? false;
+          try {
+            capeUtils.pull({ forced });
+          } catch (e: any) {
+            interaction.reply({ embeds: [embedUtils.error(e.toString())] })
+          }
+          return interaction.reply({ embeds: [embedUtils.success(`${forced ? 'Force' : ''}Pulled!`)] });
         }
         case 'push': {
           const pushResult = await capeUtils.push();
