@@ -10,7 +10,7 @@ const format = (uuid: string) => {
   return `${part1}-${part2}-${part3}-${part4}-${part5}`;
 };
 
-function usernameToUUID(username: string): string?{
+function usernameToUUID(username: string): string | undefined {
   fetch(`https://api.mojang.com/users/profiles/minecraft/${username}`)
     .then((res) => res.json())
     .then((data: any) => data.data.id)
