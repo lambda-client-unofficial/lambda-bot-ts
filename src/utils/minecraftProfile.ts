@@ -1,5 +1,5 @@
 import fetch from 'node-fetch';
-import Profile from '../types/Profile';
+import Profile from '../types/profile';
 import Names from '../types/names';
 import Textures from '../types/textures';
 
