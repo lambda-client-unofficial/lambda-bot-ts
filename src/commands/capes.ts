@@ -74,18 +74,21 @@ export default {
           return interaction.reply({ embeds: [embedUtils.success(`${forced ? 'Force' : ''}Pulled!`)] });
         }
         case 'push': {
-          const pushResult = await capeUtils.push();
-          if (!pushResult) { await capeUtils.pull(); await capeUtils.push(); }
+          try {
+            const result = capeUtils.push();
+            console.log(result);
+          } catch (e: any) {
+            return interaction.reply({ embeds: [embedUtils.error(e.toString())] })
+          }
           return interaction.reply({ embeds: [embedUtils.success('Pushed to remote.')] });
         }
         case 'add': {
           const minecraftUsername = interaction.options.getString('minecraft_username');
+          if (!minecraftUsername) return interaction.reply({ embeds: [embedUtils.error('Please provide a minecraft name.')] })
           const user = interaction.options.getString('user_id')!.split("'")[0];
-          // if (!await checkuser(user)) return interaction.reply({ embeds: [embedUtils.error('Invalid user')] }); //need fix
-          const minecraftUUID = await uuidUtils.usernameToUUID(minecraftUsername as string);
+          const minecraftUUID = uuidUtils.usernameToUUID(minecraftUsername);
           if (!minecraftUUID) return interaction.reply({ embeds: [embedUtils.error('Invalid username or nonexistent player')] });
-          const addResult = await capeUtils.add(user, minecraftUUID);
-          if (!addResult) return interaction.reply({ embeds: [embedUtils.error('No local data found. Please pull first.')] });
+          capeUtils.add(parseInt(user, 10), minecraftUUID);
           return interaction.reply({ embeds: [embedUtils.success(`Added <@${user}>, Info: \`\`\`Username: ${minecraftUsername}\nUUID: ${minecraftUUID}\`\`\``)] });
         }
         default: return interaction.reply({ embeds: [embedUtils.error('Please choose something.')] });

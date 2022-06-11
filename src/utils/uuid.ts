@@ -9,11 +9,12 @@ const format = (uuid: string) => {
   const part5 = uuid.slice(20, 32);
   return `${part1}-${part2}-${part3}-${part4}-${part5}`;
 };
-const usernameToUUID = async (username: string) => {
+
+function usernameToUUID(username: string): string?{
   fetch(`https://api.mojang.com/users/profiles/minecraft/${username}`)
     .then((res) => res.json())
     .then((data: any) => data.data.id)
-    .catch((_e) => false);
+  return undefined;
 };
 
 const uuidUtils = {
