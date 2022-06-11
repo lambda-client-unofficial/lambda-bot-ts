@@ -1,10 +1,12 @@
 import fetch from 'node-fetch';
+import Profile from '../types/Profile';
 
-function profile(name: string) {
+function profile(name: string): Profile | undefined {
   fetch(`https://api.mojang.com/users/profiles/minecraft/${name}`)
     .then((res) => res.json())
-    .then((data) => data)
+    .then((data) => (data as Profile))
     .catch((_err) => false);
+  return undefined;
 }
 
 function nameHistory(uuid: string) {
