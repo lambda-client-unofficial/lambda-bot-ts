@@ -6,9 +6,9 @@ async function checkuser(id: Snowflake) {
     headers: {
       authorization: `Bot ${process.env.TOKEN}`,
     },
-  }).then((req) => req.data.id).catch((err) => err);
+  }).then((res) => res.data.id).catch((err) => err);
   return !(req instanceof Error);
-};
+}
 
 const discordUtils = {
   checkuser,

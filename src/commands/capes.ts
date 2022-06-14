@@ -1,8 +1,9 @@
-import { CommandInteraction, CommandInteractionOptionResolver, CommandInteractionResolvedData } from 'discord.js';
+import { CommandInteraction } from 'discord.js';
 import capeUtils from '../utils/capes.js';
 import embedUtils from '../utils/embed.js';
 import uuidUtils from '../utils/uuid.js';
-import("colors")
+
+import('colors');
 
 export default {
   name: 'capes',
@@ -60,28 +61,34 @@ export default {
   ],
 
   run: async (interaction: CommandInteraction) => {
-    if(!interaction.isChatInputCommand()) return
+    if (!interaction.isChatInputCommand()) return;
     interaction.options.data.forEach(async (index) => {
       switch (index.name) {
         case 'pull': {
-          const isForced = interaction.options.get('force') ?? false;
-          const pullResult = await capeUtils.pull(/*isForced*/);
-          //if (!pullResult && !isForced) return interaction.reply({ embeds: [embedUtils.error('Add `force:true` in the options to override local data.')] });
-          return interaction.reply({ embeds: [embedUtils.success('Pulled!')] });
+          const forced = interaction.options.getBoolean('force') ?? false;
+          try {
+            capeUtils.pull({ forced });
+          } catch (e: any) {
+            interaction.reply({ embeds: [embedUtils.error(e.toString())] });
+          }
+          return interaction.reply({ embeds: [embedUtils.success(`${forced ? 'Force' : ''}Pulled!`)] });
         }
         case 'push': {
-          const pushResult = await capeUtils.push();
-          if (!pushResult) { await capeUtils.pull(); await capeUtils.push(); }
+          try {
+            const result = capeUtils.push();
+            console.log(result);
+          } catch (e: any) {
+            return interaction.reply({ embeds: [embedUtils.error(e.toString())] });
+          }
           return interaction.reply({ embeds: [embedUtils.success('Pushed to remote.')] });
         }
         case 'add': {
           const minecraftUsername = interaction.options.getString('minecraft_username');
+          if (!minecraftUsername) return interaction.reply({ embeds: [embedUtils.error('Please provide a minecraft name.')] });
           const user = interaction.options.getString('user_id')!.split("'")[0];
-          //if (!await checkuser(user)) return interaction.reply({ embeds: [embedUtils.error('Invalid user')] }); //need fix
-          const minecraftUUID = await uuidUtils.usernameToUUID(minecraftUsername as string);
+          const minecraftUUID = uuidUtils.usernameToUUID(minecraftUsername);
           if (!minecraftUUID) return interaction.reply({ embeds: [embedUtils.error('Invalid username or nonexistent player')] });
-          const addResult = await capeUtils.add(user, minecraftUUID);
-          if (!addResult) return interaction.reply({ embeds: [embedUtils.error('No local data found. Please pull first.')] });
+          capeUtils.add(parseInt(user, 10), minecraftUUID);
           return interaction.reply({ embeds: [embedUtils.success(`Added <@${user}>, Info: \`\`\`Username: ${minecraftUsername}\nUUID: ${minecraftUUID}\`\`\``)] });
         }
         default: return interaction.reply({ embeds: [embedUtils.error('Please choose something.')] });
