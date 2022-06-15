@@ -1,6 +1,6 @@
 import fetch from 'node-fetch';
 import Profile from '../types/profile';
-import Names from '../types/names';
+import Name from '../types/name';
 import Textures from '../types/textures';
 
 function profile(name: string): Profile | undefined {
@@ -11,10 +11,10 @@ function profile(name: string): Profile | undefined {
   return undefined;
 }
 
-function nameHistory(uuid: string): Names | undefined {
+function nameHistory(uuid: string): Name[] | undefined {
   fetch(`https://api.mojang.com/user/profiles/${uuid}/names`)
     .then((res) => res.json())
-    .then((data) => (data as Names))
+    .then((data) => (data as Name[]))
     .catch((_err) => false);
   return undefined;
 }
