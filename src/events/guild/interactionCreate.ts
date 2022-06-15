@@ -2,13 +2,14 @@ import { Client, CommandInteraction } from 'discord.js';
 import ms from 'ms';
 import { commands } from '../../commandsLoader';
 import embedUtils from '../../utils/embed';
+import Command from '../../types/command'
 
 const Timeout = new Set();
 
 export default async (client: Client, interaction: CommandInteraction) => {
-  if (commands.has(interaction.commandName)) return;
+  if (!commands.has(interaction.commandName)) return;
   if (!interaction.guild) return;
-  const command = commands.get(interaction.commandName);
+  const command = commands.get(interaction.commandName)!;
   try {
     if (command.timeout) {
       if (Timeout.has(`${interaction.user.id}${command.name}`)) {
