@@ -1,13 +1,13 @@
-import { Snowflake } from 'discord.js';
-import axios from 'axios';
+import { APIUser, Snowflake } from 'discord.js';
+import fetch from 'cross-fetch';
 
 async function checkuser(id: Snowflake) {
-  const req = await axios.get(`https://discordapp.com/api/v9/users/${id}`, {
+  const req = await fetch(`https://discordapp.com/api/v9/users/${id}`, {
     headers: {
-      authorization: `Bot ${process.env.TOKEN}`,
+      "Authorization": `Bot ${process.env.TOKEN}`,
     },
-  }).then((res) => res.data.id).catch((err) => err);
-  return !(req instanceof Error);
+  })
+  return req.ok ? await req.json() as APIUser : undefined;
 }
 
 const discordUtils = {
