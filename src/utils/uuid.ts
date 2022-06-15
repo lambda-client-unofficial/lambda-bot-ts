@@ -1,4 +1,5 @@
-import fetch from 'node-fetch';
+import fetch from 'cross-fetch';
+import minecraftUtils from './minecraftProfile';
 
 const format = (uuid: string) => {
   if (typeof uuid !== 'string') throw Error('Bad UUID');
@@ -10,11 +11,9 @@ const format = (uuid: string) => {
   return `${part1}-${part2}-${part3}-${part4}-${part5}`;
 };
 
-function usernameToUUID(username: string): string | undefined {
-  fetch(`https://api.mojang.com/users/profiles/minecraft/${username}`)
-    .then((res) => res.json())
-    .then((data: any) => data.data.id);
-  return undefined;
+async function usernameToUUID(username: string): Promise<string | undefined> {
+  const user = await minecraftUtils.profile(username)
+  return user?.id || undefined
 }
 
 const uuidUtils = {
