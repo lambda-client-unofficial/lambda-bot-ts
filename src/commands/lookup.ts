@@ -8,7 +8,7 @@ import {
 } from 'discord.js';
 import embedUtils from '../utils/embed.js';
 import minecraftUtils from '../utils/minecraftProfile';
-import Names from '../types/names.js';
+import Names from '../types/name';
 
 export default {
   name: 'lookup',

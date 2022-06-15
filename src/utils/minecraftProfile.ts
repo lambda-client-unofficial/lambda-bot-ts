@@ -1,6 +1,6 @@
 import fetch from 'cross-fetch';
 import Profile from '../types/Profile';
-import Names from '../types/names';
+import Names from '../types/name';
 import Textures, { TextureURL } from '../types/textures';
 
 async function profile(name: string): Promise<Profile | undefined> {
