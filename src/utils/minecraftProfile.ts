@@ -4,21 +4,19 @@ import Names from '../types/names';
 import Textures, { TextureURL } from '../types/textures';
 
 async function profile(name: string): Promise<Profile | undefined> {
-  const _profile: Profile = await (await fetch(`https://api.mojang.com/users/profiles/minecraft/${name}`)).json();
-  return _profile instanceof Error ? undefined : _profile;
+  const userProfile: Profile = await fetch(`https://api.mojang.com/users/profiles/minecraft/${name}`).then(async res => await res.json()).catch((err: Error) => err)
+  return userProfile instanceof Error ? undefined : userProfile;
 }
 
 async function nameHistory(uuid: string): Promise<Names | undefined> {
-  const names: Names = await (await fetch(`https://api.mojang.com/user/profiles/${uuid}/names`)).json();
+  const names: Names = await fetch(`https://api.mojang.com/user/profiles/${uuid}/names`).then(async res => await res.json()).catch((err: Error) => err)
   return names instanceof Error ? undefined : names;
 }
 
 async function textures(uuid: string): Promise<TextureURL | undefined> {
-  const textures = await fetch(`https://sessionserver.mojang.com/session/minecraft/profile/${uuid}`).catch(err => err).then(async(textures) => {
-    return await textures.json() as Textures;
-  })
-  const texture_url: TextureURL = JSON.parse(atob(textures.properties[0].value as unknown as string))!;
-  return textures instanceof Error ? undefined : texture_url;
+  const textureUser: Textures = await fetch(`https://sessionserver.mojang.com/session/minecraft/profile/${uuid}`).then(async res => await res.json()).catch((err: Error) => err);
+  const texture_url: TextureURL = JSON.parse(atob(textureUser.properties[0].value.toString()))!;
+  return textureUser instanceof Error ? undefined : texture_url;
 }
 
 const minecraftUtils = {

@@ -1,4 +1,5 @@
 export default interface Textures {
+  json(): Textures | PromiseLike<Textures>
   id: string
   name: string
   properties: Property[]
