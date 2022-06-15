@@ -1,9 +1,8 @@
 import { CommandInteraction } from 'discord.js';
 import capeUtils from '../utils/capes.js';
+import discordUtils from '../utils/checkuser.js';
 import embedUtils from '../utils/embed.js';
 import uuidUtils from '../utils/uuid.js';
-
-import('colors');
 
 export default {
   name: 'capes',
@@ -65,31 +64,28 @@ export default {
     interaction.options.data.forEach(async (index) => {
       switch (index.name) {
         case 'pull': {
-          const forced = interaction.options.getBoolean('force') ?? false;
+          const forced: boolean = interaction.options.getBoolean('force') ?? false;
+          if(forced == undefined) return await interaction.reply({ embeds: [embedUtils.error("error")]})
           try {
-            capeUtils.pull({ forced });
+            await capeUtils.pull(forced);
           } catch (e: any) {
-            interaction.reply({ embeds: [embedUtils.error(e.toString())] });
+            return interaction.reply({ embeds: [embedUtils.error(e?.toString())] });
           }
-          return interaction.reply({ embeds: [embedUtils.success(`${forced ? 'Force' : ''}Pulled!`)] });
+          return interaction.reply({ embeds: [embedUtils.success("Pulled successfully")] });
         }
         case 'push': {
-          try {
-            const result = capeUtils.push();
-            console.log(result);
-          } catch (e: any) {
-            return interaction.reply({ embeds: [embedUtils.error(e.toString())] });
-          }
-          return interaction.reply({ embeds: [embedUtils.success('Pushed to remote.')] });
+            await capeUtils.push();
+            return interaction.reply({ embeds: [embedUtils.success('Pushed to remote.')] });
         }
         case 'add': {
           const minecraftUsername = interaction.options.getString('minecraft_username');
           if (!minecraftUsername) return interaction.reply({ embeds: [embedUtils.error('Please provide a minecraft name.')] });
-          const user = interaction.options.getString('user_id')!.split("'")[0];
-          const minecraftUUID = uuidUtils.usernameToUUID(minecraftUsername);
+          const user = await discordUtils.checkuser(interaction.options.getString('user_id')!)
+          if(user == undefined) return interaction.reply({ embeds: [embedUtils.error('Please provide a valid user ID')]})
+          const minecraftUUID = await uuidUtils.usernameToUUID(minecraftUsername);
           if (!minecraftUUID) return interaction.reply({ embeds: [embedUtils.error('Invalid username or nonexistent player')] });
-          capeUtils.add(parseInt(user, 10), minecraftUUID);
-          return interaction.reply({ embeds: [embedUtils.success(`Added <@${user}>, Info: \`\`\`Username: ${minecraftUsername}\nUUID: ${minecraftUUID}\`\`\``)] });
+          await capeUtils.add(user.id, minecraftUUID);
+          return interaction.reply({ embeds: [embedUtils.success(`Added <@${user.id}>, Info: \`\`\`Username: ${minecraftUsername}\nUUID: ${minecraftUUID}\`\`\``)], allowedMentions: { "users": [] } });
         }
         default: return interaction.reply({ embeds: [embedUtils.error('Please choose something.')] });
       }
