@@ -50,7 +50,7 @@ export default {
           try {
             namesRes.forEach((name: Names[0]) => { //need fix for Usernames
               let time = name.changedToAt ? new Date(name.changedToAt).toLocaleString("en-US") : "First Appeared Name"
-              embed.addFields([{ name: name.name, value: time }]);
+              embed.addFields([{ name: name.name, value: new Date(time).toLocaleString("en-US") }]);
             });
           } catch (e) {
             return e;
