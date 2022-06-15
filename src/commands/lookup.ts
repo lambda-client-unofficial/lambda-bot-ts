@@ -41,9 +41,9 @@ export default {
             .setImage(`https://crafatar.com/renders/body/${user.id}?overlay`)
             .setColor(Colors.Blue);
           try {
-            namesRes.forEach((name: Names[0]) => { //need fix for Usernames
-              let time = name.changedToAt ? new Date(name.changedToAt).toLocaleString("en-US") : "First Appeared Name"
-              embed.addFields([{ name: name.name, value: new Date(time).toLocaleString("en-US") }]);
+            namesRes.forEach((name: Names[0]) => {
+              let time = name.changedToAt != undefined ? new Date(name.changedToAt).toLocaleString("en-US") : "First Appeared Name"
+              embed.addFields([{ name: name.name, value: time }]);
             });
           } catch (e) {
             return e;
