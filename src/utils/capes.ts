@@ -1,14 +1,15 @@
 import { Octokit } from 'octokit';
 import 'dotenv/config';
-import fs from 'graceful-fs';
+import * as fs from 'graceful-fs';
 import { capeRepo } from '../../config';
+import { Base64String } from 'discord.js';
 
 const octokit = new Octokit({
   auth: process.env.GITHUB_TOKEN,
 });
 
-function pull(options?: { forced: boolean }) {
-  octokit.request('GET /repos/{owner}/{repo}/contents/{path}', {
+async function pull(forced?: boolean) {
+  const req = await octokit.request('GET /repos/{owner}/{repo}/contents/{path}', {
     owner: capeRepo.owner,
     repo: capeRepo.repo,
     path: capeRepo.path,
@@ -16,8 +17,10 @@ function pull(options?: { forced: boolean }) {
   })
     .then((res) => {
       const data = res.data as any;
-      if (fs.existsSync('../capes.json') && Buffer.from((res.data as any).content, 'base64') !== fs.readFileSync('../capes.json')) {
-        if (options?.forced) return;
+      console.log(fs.readFileSync('../capes.json'))
+      console.log(String(Buffer.from(data.content, "base64")) == String(fs.readFileSync('../capes.json')))
+      if (fs.existsSync('../capes.json')) if(String(Buffer.from(data.content, "base64")) == String(fs.readFileSync('../capes.json'))){
+        if (!forced) return;
         throw Error('Conflict detected in capes.json');
       }
       fs.writeFileSync('../capes.json', Buffer.from(data.content, 'base64'));
@@ -25,7 +28,7 @@ function pull(options?: { forced: boolean }) {
     });
 }
 
-function push() {
+async function push() {
   if (!fs.existsSync('../capes.json')) {
     throw Error('File does not exist');
   }
@@ -47,10 +50,10 @@ function push() {
   }).then((res) => res.data).catch((e) => e);
 }
 
-function add(discordId: number, uuid: string) {
+async function add(discordId: string, uuid: string) {
   const capes = JSON.parse(fs.readFileSync('../capes.json', 'utf8'));
   const template = {
-    id: discordId,
+    id: Number(discordId),
     capes: [
       {
         cape_uuid: Number(JSON.stringify(capes.length + 1)),
