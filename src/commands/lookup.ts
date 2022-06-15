@@ -34,7 +34,7 @@ export default {
       switch (index.name) {
         case 'name': {
           const username = interaction.options.getString('username');
-          if (!username) return interaction.reply({ embeds: [embedUtils.error('Specify a player.')] })
+          if (!username) return interaction.reply({ embeds: [embedUtils.error('Specify a player.')] });
           const user = minecraftUtils.profile(username);
           if (!user) return interaction.reply({ embeds: [embedUtils.error('No user found.')] });
           const namesRes = minecraftUtils.nameHistory(user.id);
@@ -49,9 +49,9 @@ export default {
             .setColor('Blue');
           try {
             namesRes.forEach((name: Name) => {
-              let time: string | undefined = undefined;
+              let time: string | undefined;
               if (!name.changedToAt) {
-                time = 'First Appeared Name'
+                time = 'First Appeared Name';
               } else {
                 time = new Date(name.changedToAt).toString();
               }
@@ -79,4 +79,3 @@ export default {
     });
   },
 };
-
