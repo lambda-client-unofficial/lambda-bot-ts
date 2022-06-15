@@ -1,10 +1,8 @@
 node_modules/
+build/*
 .vscode/
 capes.json
 capes.json.shasum
 json.sqlite
 .env
 config.js
-build/
-package-lock.json
-yarn.lock
