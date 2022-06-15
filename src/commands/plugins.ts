@@ -1,7 +1,7 @@
 import ms from 'ms';
 import { Client, CommandInteraction, EmbedBuilder } from 'discord.js';
 import size from '../utils/bytes';
-import listPlugins from '../utils/plugins'
+import listPlugins from '../utils/plugins';
 
 export default {
   name: 'plugins',
@@ -10,7 +10,7 @@ export default {
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   run: async (interaction: CommandInteraction, _client: Client) => {
-    const pluginList = await (await listPlugins.listPlugins()).data
+    const pluginList = await (await listPlugins.listPlugins()).data;
     const pluginEmbed = new EmbedBuilder().setTitle('Plugins Informations');
     pluginList.forEach((plugin) => {
       pluginEmbed.addFields([{

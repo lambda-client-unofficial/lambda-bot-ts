@@ -65,7 +65,7 @@ export default {
       switch (index.name) {
         case 'pull': {
           const forced: boolean = interaction.options.getBoolean('force') ?? false;
-          if(forced == undefined) return await interaction.reply({ embeds: [embedUtils.error("error")]})
+          if(forced === undefined) return await interaction.reply({ embeds: [embedUtils.error("error")]});
           try {
             await capeUtils.pull(forced);
           } catch (e: any) {
@@ -80,8 +80,8 @@ export default {
         case 'add': {
           const minecraftUsername = interaction.options.getString('minecraft_username');
           if (!minecraftUsername) return interaction.reply({ embeds: [embedUtils.error('Please provide a minecraft name.')] });
-          const user = await discordUtils.checkuser(interaction.options.getString('user_id')!)
-          if(user == undefined) return interaction.reply({ embeds: [embedUtils.error('Please provide a valid user ID')]})
+          const user = await discordUtils.checkuser(interaction.options.getString('user_id')!);
+          if(user === undefined) return interaction.reply({ embeds: [embedUtils.error('Please provide a valid user ID')]});
           const minecraftUUID = await uuidUtils.usernameToUUID(minecraftUsername);
           if (!minecraftUUID) return interaction.reply({ embeds: [embedUtils.error('Invalid username or nonexistent player')] });
           await capeUtils.add(user.id, minecraftUUID);

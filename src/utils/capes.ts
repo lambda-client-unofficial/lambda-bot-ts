@@ -2,14 +2,13 @@ import { Octokit } from 'octokit';
 import 'dotenv/config';
 import * as fs from 'graceful-fs';
 import { capeRepo } from '../../config';
-import { Base64String } from 'discord.js';
 
 const octokit = new Octokit({
   auth: process.env.GITHUB_TOKEN,
 });
 
 async function pull(forced?: boolean) {
-  const req = await octokit.request('GET /repos/{owner}/{repo}/contents/{path}', {
+  octokit.request('GET /repos/{owner}/{repo}/contents/{path}', {
     owner: capeRepo.owner,
     repo: capeRepo.repo,
     path: capeRepo.path,
@@ -17,14 +16,14 @@ async function pull(forced?: boolean) {
   })
     .then((res) => {
       const data = res.data as any;
-      console.log(fs.readFileSync('../capes.json'))
-      console.log(String(Buffer.from(data.content, "base64")) == String(fs.readFileSync('../capes.json')))
-      if (fs.existsSync('../capes.json')) if(String(Buffer.from(data.content, "base64")) == String(fs.readFileSync('../capes.json'))){
-        if (!forced) return;
-        throw Error('Conflict detected in capes.json');
+      if (fs.existsSync('../capes.json')) {
+        if (String(Buffer.from(data.content, "base64")) == String(fs.readFileSync('../capes.json'))) {
+          if (!forced) return;
+          throw Error('Conflict detected in capes.json');
+        }
+        fs.writeFileSync('../capes.json', Buffer.from(data.content, 'base64'));
+        fs.writeFileSync('../capes.json.shasum', data.sha);
       }
-      fs.writeFileSync('../capes.json', Buffer.from(data.content, 'base64'));
-      fs.writeFileSync('../capes.json.shasum', data.sha);
     });
 }
 

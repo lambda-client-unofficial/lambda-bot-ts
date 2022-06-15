@@ -1,14 +1,7 @@
-import {
-  CommandInteraction,
-  EmbedBuilder,
-  ActionRowBuilder,
-  ButtonBuilder,
-  ButtonStyle,
-  Colors,
-} from 'discord.js';
+import { CommandInteraction, EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, Colors } from 'discord.js';
 import embedUtils from '../utils/embed.js';
 import minecraftUtils from '../utils/minecraftProfile';
-import Names from '../types/name';
+import Names from '../types/names';
 
 export default {
   name: 'lookup',

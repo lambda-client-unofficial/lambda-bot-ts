@@ -1,4 +1,3 @@
-import fetch from 'cross-fetch';
 import minecraftUtils from './minecraftProfile';
 
 const format = (uuid: string) => {
@@ -12,8 +11,8 @@ const format = (uuid: string) => {
 };
 
 async function usernameToUUID(username: string): Promise<string | undefined> {
-  const user = await minecraftUtils.profile(username)
-  return user?.id || undefined
+  const user = await minecraftUtils.profile(username);
+  return user?.id || undefined;
 }
 
 const uuidUtils = {
