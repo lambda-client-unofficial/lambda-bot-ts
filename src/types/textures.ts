@@ -6,5 +6,15 @@ export default interface Textures {
 
 export interface Property {
   name: string
-  value: string
+  value: Buffer
+}
+export interface TextureURL {
+  timestamp: Date
+  profileId: string
+  profileName: string
+  textures: {
+    SKIN: {
+      url: string
+    }
+  }
 }
