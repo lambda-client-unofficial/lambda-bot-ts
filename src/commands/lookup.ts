@@ -4,10 +4,11 @@ import {
   ActionRowBuilder,
   ButtonBuilder,
   ButtonStyle,
+  Colors,
 } from 'discord.js';
 import embedUtils from '../utils/embed.js';
 import minecraftUtils from '../utils/minecraftProfile';
-import { Usernames } from './types/Usernames.js';
+import Names from '../types/names.js';
 
 export default {
   name: 'lookup',
@@ -30,25 +31,26 @@ export default {
 
   run: async (interaction: CommandInteraction) => {
     interaction.options.data.forEach(async (index) => {
+      if (!interaction.isChatInputCommand()) return;
       switch (index.name) {
         case 'name': {
-          const username = interaction.options.get('username') as unknown; // need fix
-          const user = await minecraftUtils.profile(username as any); // no need to check if the type is set to string bruh
-          if (!user) return interaction.reply({ embeds: [embedUtils.error('No user found.')] });
-          const namesRes = await minecraftUtils.names(user);
-          if (!namesRes) return interaction.reply({ embeds: [embedUtils.error('Unknown error')] });
-          const texturesRes = await minecraftUtils.textures(user);
-          if (!texturesRes) return interaction.reply({ embeds: [embedUtils.error('Unknown error')] });
+          const username = interaction.options.getString('username')!;
+          const user = await minecraftUtils.profile(username)!; // no need to check if the type is set to string bruh
+          if (user == undefined) return interaction.reply({ embeds: [embedUtils.error('No user found.')] });
+          const namesRes = await minecraftUtils.nameHistory(user.id);
+          if (namesRes == undefined) return interaction.reply({ embeds: [embedUtils.error('Unknown error')] });
+          const texturesRes = await minecraftUtils.textures(user.id)!;
+          if (texturesRes == undefined) return interaction.reply({ embeds: [embedUtils.error('Unknown error')] });
 
           const embed = new EmbedBuilder()
             .setTitle(`${username}'s Profile`)
-            .addFields([{ name: 'UUID:', value: user }])
-            .setImage(`https://crafatar.com/renders/body/${user}?overlay`)
-            .setColor('Blue');
+            .addFields([{ name: 'UUID:', value: user.id }])
+            .setImage(`https://crafatar.com/renders/body/${user.id}?overlay`)
+            .setColor(Colors.Blue);
           try {
-            namesRes.forEach((name: Usernames) => {
-              let time = new Date(name.changedToAt).toString(); if (time.toString().toLowerCase().includes('nan')) time = 'First Appeared Name';
-              embed.addFields([{ name: name.name ?? 'Unknown', value: time ?? 'First Appeared Name' }]);
+            namesRes.forEach((name: Names[0]) => { //need fix for Usernames
+              let time = name.changedToAt ? new Date(name.changedToAt).toLocaleString("en-US") : "First Appeared Name"
+              embed.addFields([{ name: name.name, value: time }]);
             });
           } catch (e) {
             return e;
@@ -56,7 +58,7 @@ export default {
           const row = new ActionRowBuilder().addComponents([
             new ButtonBuilder()
               .setStyle(ButtonStyle.Link)
-              .setURL(texturesRes)
+              .setURL(texturesRes.textures.SKIN.url)
               .setLabel('Player skin'),
           ]).addComponents([
             new ButtonBuilder()
