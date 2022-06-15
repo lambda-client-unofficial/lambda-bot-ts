@@ -7,7 +7,7 @@ import {
 } from 'discord.js';
 import embedUtils from '../utils/embed.js';
 import minecraftUtils from '../utils/minecraftProfile';
-import { Usernames } from './types/Usernames.js';
+import Name from '../types/name';
 
 export default {
   name: 'lookup',
@@ -29,25 +29,32 @@ export default {
   ],
 
   run: async (interaction: CommandInteraction) => {
+    if (!interaction.isChatInputCommand()) return;
     interaction.options.data.forEach(async (index) => {
       switch (index.name) {
         case 'name': {
-          const username = interaction.options.get('username') as unknown; // need fix
-          const user = await minecraftUtils.profile(username as any); // no need to check if the type is set to string bruh
+          const username = interaction.options.getString('username');
+          if (!username) return interaction.reply({ embeds: [embedUtils.error('Specify a player.')] })
+          const user = minecraftUtils.profile(username);
           if (!user) return interaction.reply({ embeds: [embedUtils.error('No user found.')] });
-          const namesRes = await minecraftUtils.names(user);
+          const namesRes = minecraftUtils.nameHistory(user.id);
           if (!namesRes) return interaction.reply({ embeds: [embedUtils.error('Unknown error')] });
-          const texturesRes = await minecraftUtils.textures(user);
+          const texturesRes = minecraftUtils.textures(user.id);
           if (!texturesRes) return interaction.reply({ embeds: [embedUtils.error('Unknown error')] });
 
           const embed = new EmbedBuilder()
             .setTitle(`${username}'s Profile`)
-            .addFields([{ name: 'UUID:', value: user }])
+            .addFields([{ name: 'UUID:', value: user.id }])
             .setImage(`https://crafatar.com/renders/body/${user}?overlay`)
             .setColor('Blue');
           try {
-            namesRes.forEach((name: Usernames) => {
-              let time = new Date(name.changedToAt).toString(); if (time.toString().toLowerCase().includes('nan')) time = 'First Appeared Name';
+            namesRes.forEach((name: Name) => {
+              let time: string | undefined = undefined;
+              if (!name.changedToAt) {
+                time = 'First Appeared Name'
+              } else {
+                time = new Date(name.changedToAt).toString();
+              }
               embed.addFields([{ name: name.name ?? 'Unknown', value: time ?? 'First Appeared Name' }]);
             });
           } catch (e) {
@@ -56,7 +63,7 @@ export default {
           const row = new ActionRowBuilder().addComponents([
             new ButtonBuilder()
               .setStyle(ButtonStyle.Link)
-              .setURL(texturesRes)
+              .setURL(texturesRes.id)
               .setLabel('Player skin'),
           ]).addComponents([
             new ButtonBuilder()
@@ -72,3 +79,4 @@ export default {
     });
   },
 };
+
