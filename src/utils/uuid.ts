@@ -1,6 +1,6 @@
-const axios = require('axios').default;
+import minecraftUtils from './minecraftProfile';
 
-const format = (uuid) => {
+const format = (uuid: string) => {
   if (typeof uuid !== 'string') throw Error('Bad UUID');
   const part1 = uuid.slice(0, 8);
   const part2 = uuid.slice(8, 12);
@@ -9,14 +9,15 @@ const format = (uuid) => {
   const part5 = uuid.slice(20, 32);
   return `${part1}-${part2}-${part3}-${part4}-${part5}`;
 };
-const usernameToUUID = async (username) => {
-  const uuid = await axios.get(`https://api.mojang.com/users/profiles/minecraft/${username}`).then((res) => res.data.id).catch((e) => (e));
-  return uuid ?? false;
-};
+
+async function usernameToUUID(username: string): Promise<string | undefined> {
+  const user = await minecraftUtils.profile(username);
+  return user?.id || undefined;
+}
 
 const uuidUtils = {
   format,
   usernameToUUID,
 };
 
-module.exports = uuidUtils;
+export default uuidUtils;

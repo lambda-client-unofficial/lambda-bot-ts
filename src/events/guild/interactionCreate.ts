@@ -1,12 +1,15 @@
-const ms = require('ms');
-const embedUtils = require('../../utils/embed');
+import { Client, CommandInteraction } from 'discord.js';
+import ms from 'ms';
+import { commands } from '../../commandsLoader';
+import embedUtils from '../../utils/embed';
+import Command from '../../types/command'
 
 const Timeout = new Set();
 
-module.exports = async (client, interaction) => {
-  if (!client.slash.has(interaction.commandName)) return;
+export default async (client: Client, interaction: CommandInteraction) => {
+  if (!commands.has(interaction.commandName)) return;
   if (!interaction.guild) return;
-  const command = client.slash.get(interaction.commandName);
+  const command = commands.get(interaction.commandName)!;
   try {
     if (command.timeout) {
       if (Timeout.has(`${interaction.user.id}${command.name}`)) {
@@ -18,7 +21,7 @@ module.exports = async (client, interaction) => {
     setTimeout(() => {
       Timeout.delete(`${interaction.user.id}${command.name}`);
     }, command.timeout, clearTimeout());
-  } catch (e) {
+  } catch (e: any) {
     await interaction.reply({ embeds: [embedUtils.error(`An error occured: ${e.toString()}`)] });
   }
 };
