@@ -65,27 +65,26 @@ export default {
       switch (index.name) {
         case 'pull': {
           const forced: boolean = interaction.options.getBoolean('force') ?? false;
-          if(forced === undefined) return await interaction.reply({ embeds: [embedUtils.error("error")]});
           try {
             await capeUtils.pull(forced);
           } catch (e: any) {
             return interaction.reply({ embeds: [embedUtils.error(e?.toString())] });
           }
-          return interaction.reply({ embeds: [embedUtils.success("Pulled successfully")] });
+          return interaction.reply({ embeds: [embedUtils.success('Pulled successfully')] });
         }
         case 'push': {
-            await capeUtils.push();
-            return interaction.reply({ embeds: [embedUtils.success('Pushed to remote.')] });
+          await capeUtils.push();
+          return interaction.reply({ embeds: [embedUtils.success('Pushed to remote.')] });
         }
         case 'add': {
           const minecraftUsername = interaction.options.getString('minecraft_username');
           if (!minecraftUsername) return interaction.reply({ embeds: [embedUtils.error('Please provide a minecraft name.')] });
           const user = await discordUtils.checkuser(interaction.options.getString('user_id')!);
-          if(user === undefined) return interaction.reply({ embeds: [embedUtils.error('Please provide a valid user ID')]});
+          if (user === undefined) return interaction.reply({ embeds: [embedUtils.error('Please provide a valid user ID')] });
           const minecraftUUID = await uuidUtils.usernameToUUID(minecraftUsername);
           if (!minecraftUUID) return interaction.reply({ embeds: [embedUtils.error('Invalid username or nonexistent player')] });
           await capeUtils.add(user.id, minecraftUUID);
-          return interaction.reply({ embeds: [embedUtils.success(`Added <@${user.id}>, Info: \`\`\`Username: ${minecraftUsername}\nUUID: ${minecraftUUID}\`\`\``)], allowedMentions: { "users": [] } });
+          return interaction.reply({ embeds: [embedUtils.success(`Added <@${user.id}>, Info: \`\`\`Username: ${minecraftUsername}\nUUID: ${minecraftUUID}\`\`\``)] });
         }
         default: return interaction.reply({ embeds: [embedUtils.error('Please choose something.')] });
       }

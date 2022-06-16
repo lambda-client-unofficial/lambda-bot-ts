@@ -17,7 +17,7 @@ async function pull(forced?: boolean) {
     .then((res) => {
       const data = res.data as any;
       if (fs.existsSync('../capes.json')) {
-        if (String(Buffer.from(data.content, "base64")) == String(fs.readFileSync('../capes.json'))) {
+        if (String(Buffer.from(data.content, 'base64')) === String(fs.readFileSync('../capes.json'))) {
           if (!forced) return;
           throw Error('Conflict detected in capes.json');
         }
