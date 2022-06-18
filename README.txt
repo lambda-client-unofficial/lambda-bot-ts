@@ -24,7 +24,7 @@ You can then run the bot by executing:
 Notes for Contributing
 ====================
 When writing commit messages, use the Conventional Commits[1] format.
-Lint and format your code using eslint[2] and editorconfig[2] before committing.
+Lint and format your code using eslint[2] and editorconfig[3] before committing.
 
 
 License
