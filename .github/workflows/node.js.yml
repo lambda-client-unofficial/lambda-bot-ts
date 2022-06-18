@@ -15,4 +15,9 @@ jobs:
     - uses: actions/setup-node@v3
       with:
         node-version: 16.x
-    - run: npm i && npm run lint
+    - name: Install dependencies
+      run: npm i
+    - name: Run ESLint
+      run: npm run lint
+    - name: Build
+      run: npm run build
