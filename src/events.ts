@@ -15,7 +15,7 @@ const scanEvents = async (client: Client, dirs: String) => {
     const eName = file.split('.')[0];
     client.on(eName, evt.default.bind(null, client));
     events.push(evt);
-    logger.log(`[EVENTS] Loaded event ${eName}.`.green);
+    logger.log(`[Events] Loaded event ${eName}.`.green);
   });
 };
 
