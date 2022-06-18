@@ -10,24 +10,25 @@ import embedUtils from '../utils/embed.js';
 import minecraftUtils from '../utils/minecraftProfile';
 import Names from '../types/names';
 
+const options = [
+  {
+    name: 'name',
+    description: 'The name of the user to lookup',
+    type: 1,
+    options: [
+      {
+        name: 'username',
+        description: 'The username of the user to lookup',
+        type: 3,
+      },
+    ],
+  },
+];
+
 export default {
   name: 'lookup',
   description: 'Lookup minecraft users',
-  options: [
-    {
-      name: 'name',
-      description: 'The name of the user to lookup',
-      type: 1,
-      options: [
-        {
-          name: 'username',
-          description: 'The username of the user to lookup',
-          type: 3,
-        },
-      ],
-    },
-
-  ],
+  options,
 
   run: async (interaction: CommandInteraction) => {
     interaction.options.data.forEach(async (index) => {
