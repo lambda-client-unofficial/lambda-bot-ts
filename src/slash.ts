@@ -17,33 +17,34 @@ const rest = new REST({ version: '10' }).setToken(process.env.TOKEN);
 
 const commands = new Map<string, Command>();
 
-const scanCommands = () => {
-  fs.readdirSync('./commands/').map(async (cmd: string) => {
+const scanCommands = async () => {
+  await fs.readdirSync('./commands/').map(async (cmd: string) => {
     try {
-      if (!cmd.endsWith('.js')) return;
+      if (fs.lstatSync(`${__dirname}/commands/${cmd}`).isDirectory()) return;
       const pull = await import(`${__dirname}/commands/${cmd}`);
       commands.set(pull.default.name, pull.default);
-      logger.log(`[Commands] Scanned ${pull.default.name}`.green);
-    } catch (e: any) {
-      logger.warn(`[Commands] Unable to load command ${cmd}: ${e.toString()}`.yellow);
+      logger.log(`[COMMANDS] Scanned ${pull.default.name}`.green);
+    } catch (e) {
+      logger.warn(`Unable to load command ${cmd}: ${e}`);
     }
   });
+  return commands;
 };
 
 const registerSlashCommands = async (client: Client) => {
-  scanCommands();
-  logger.log('[Discord API] Registering application commands.');
+  const c = await scanCommands();
+  logger.log('[Discord API] Refreshing application commands.');
   client.guilds.cache.forEach(async (guild: Guild) => {
     if (!process.env.BOT_ID) {
-      logger.error('[Discord API] No bot ID found.'.red);
+      logger.error('[Discord API] No bot ID found.');
       throw Error('No bot ID found.');
     }
     await rest.put(
       Routes.applicationGuildCommands(process.env.BOT_ID, guild.id),
-      { body: commands },
+      { body: c },
     );
   });
-  logger.log('[Discord API] Successfully registered all commands.'.green);
+  logger.log('[Discord API] Successfully registered all commands.');
 };
 
 export {
