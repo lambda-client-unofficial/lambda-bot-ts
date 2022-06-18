@@ -1,9 +1,10 @@
 import 'dotenv/config';
 import { REST } from '@discordjs/rest';
 import { Routes } from 'discord-api-types/v10';
-import { Client, Guild } from 'discord.js';
+import { Client, Guild, Collection } from 'discord.js';
+import * as fs from 'graceful-fs';
 import logger from './utils/logger';
-import { scanCommands } from './commandsLoader';
+import Command from './types/command';
 
 import('colors');
 
@@ -14,9 +15,24 @@ if (!process.env.TOKEN) {
 
 const rest = new REST({ version: '10' }).setToken(process.env.TOKEN);
 
+const commands = new Collection<string, Command>();
+
+const scanCommands = () => {
+  fs.readdirSync('./commands/').map(async (cmd: string) => {
+    try {
+      if (fs.lstatSync(`${__dirname}/commands/${cmd}`).isDirectory()) return;
+      const pull = await import(`${__dirname}/commands/${cmd}`);
+      commands.set(pull.default.name, pull.default);
+      logger.log(`[Commands] Scanned ${pull.default.name}`.green);
+    } catch (e: any) {
+      logger.warn(`[Commands] Unable to load command ${cmd}: ${e.toString()}`);
+    }
+  });
+};
+
 const registerSlashCommands = async (client: Client) => {
-  const commands = scanCommands();
-  logger.log('[Discord API] Refreshing application commands.');
+  scanCommands();
+  logger.log('[Discord API] Registering application commands.');
   client.guilds.cache.forEach(async (guild: Guild) => {
     if (!process.env.BOT_ID) {
       logger.error('[Discord API] No bot ID found.'.red);

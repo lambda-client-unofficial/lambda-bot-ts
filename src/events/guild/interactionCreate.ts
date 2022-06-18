@@ -1,6 +1,6 @@
 import { Client, CommandInteraction } from 'discord.js';
 import ms from 'ms';
-import { commands } from '../../commandsLoader';
+import { commands } from '../../slash';
 import embedUtils from '../../utils/embed';
 import Command from '../../types/command'
 
