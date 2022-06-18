@@ -1,7 +1,7 @@
 import 'dotenv/config';
 import { REST } from '@discordjs/rest';
 import { Routes } from 'discord-api-types/v10';
-import { Client, Guild, Collection } from 'discord.js';
+import { Client, Guild } from 'discord.js';
 import * as fs from 'graceful-fs';
 import logger from './utils/logger';
 import Command from './types/command';
@@ -15,7 +15,7 @@ if (!process.env.TOKEN) {
 
 const rest = new REST({ version: '10' }).setToken(process.env.TOKEN);
 
-const commands = new Collection<string, Command>();
+const commands = new Map<string, Command>();
 
 const scanCommands = () => {
   fs.readdirSync('./commands/').map(async (cmd: string) => {
@@ -46,4 +46,7 @@ const registerSlashCommands = async (client: Client) => {
   logger.log('[Discord API] Successfully registered all commands.'.green);
 };
 
-export default registerSlashCommands;
+export {
+  commands,
+  registerSlashCommands,
+};

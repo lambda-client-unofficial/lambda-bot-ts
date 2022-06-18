@@ -2,7 +2,7 @@ import 'dotenv/config';
 import { Client } from 'discord.js';
 import { GatewayIntentBits } from 'discord-api-types/v10';
 import logger from './utils/logger';
-import registerSlashCommands from './slash';
+import { registerSlashCommands } from './slash';
 import resgisterEvents from './events';
 
 const client = new Client({
