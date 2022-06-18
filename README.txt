@@ -17,17 +17,12 @@ Then add these variables in your process enviroment, or your .env file:
 
 You can then run the bot by executing:
 
-    pnpm dev
-
-If you do not want to use pnpm, you can run this instead:
-
-    npm run build && npm run run        // for node
-    yarn build && yarn run              // for yarn
+    yarn dev                             # for yarn
+    npm run build && npm run run         # for npm
 
 
 Notes for Contributing
 ====================
-The recommended package manager is pnpm.
 When writing commit messages, use the Conventional Commits[1] format.
 Lint and format your code using eslint[2] and editorconfig[2] before committing.
 

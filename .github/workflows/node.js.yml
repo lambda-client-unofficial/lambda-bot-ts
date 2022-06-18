@@ -1,4 +1,4 @@
-name: ESLint
+name: Lint and Build
 
 on:
   push:
@@ -15,10 +15,10 @@ jobs:
     - uses: actions/setup-node@v3
       with:
         node-version: 16.x
-        cache: 'npm'
+        cache: 'yarn'
     - name: Install dependencies
       run: npm i
-    - name: Run ESLint
+    - name: Lint
       run: npm run lint
     - name: Build
       run: npm run build
