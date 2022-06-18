@@ -20,12 +20,12 @@ const commands = new Map<string, Command>();
 const scanCommands = () => {
   fs.readdirSync('./commands/').map(async (cmd: string) => {
     try {
-      if (fs.lstatSync(`${__dirname}/commands/${cmd}`).isDirectory()) return;
+      if (!cmd.endsWith('.js')) return;
       const pull = await import(`${__dirname}/commands/${cmd}`);
       commands.set(pull.default.name, pull.default);
       logger.log(`[Commands] Scanned ${pull.default.name}`.green);
     } catch (e: any) {
-      logger.warn(`[Commands] Unable to load command ${cmd}: ${e.toString()}`);
+      logger.warn(`[Commands] Unable to load command ${cmd}: ${e.toString()}`.yellow);
     }
   });
 };
