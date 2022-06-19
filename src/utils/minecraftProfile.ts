@@ -3,28 +3,17 @@ import Profile from '../types/profile';
 import Names from '../types/names';
 import Textures, { TextureURL } from '../types/textures';
 
-function profile(name: string): Profile | undefined {
-  fetch(`https://api.mojang.com/users/profiles/minecraft/${name}`)
-    .then((res) => res.json())
-    .then((data) => data)
-    .catch((e) => e);
-  return undefined;
+async function profile(name: string): Promise<Profile> {
+  return (await (await fetch(`https://api.mojang.com/users/profiles/minecraft/${name}`)).json()) as Profile;
 }
 
-function nameHistory(uuid: string): Names | undefined {
-  fetch(`https://api.mojang.com/user/profiles/${uuid}/names`)
-    .then((res) => res.json())
-    .then((data) => data)
-    .catch((e) => e);
-  return undefined;
+async function nameHistory(uuid: string): Promise<Names> {
+  return (await (await fetch(`https://api.mojang.com/user/profiles/${uuid}/names`)).json()) as Names;
 }
 
-function textures(uuid: string): TextureURL | undefined {
-  fetch(`https://sessionserver.mojang.com/session/minecraft/profile/${uuid}`)
-    .then((res) => res.json())
-    .then((data: Textures) => JSON.parse(Buffer.from(data.properties[0].value.toString(), 'base64').toString('utf8')))
-    .catch((e) => e);
-  return undefined;
+async function textures(uuid: string): Promise<TextureURL> {
+  const data = (await (await fetch(`https://sessionserver.mojang.com/session/minecraft/profile/${uuid}`)).json()) as Textures;
+  return JSON.parse(Buffer.from(data.properties[0].value.toString(), 'base64').toString('utf8')) as TextureURL;
 }
 
 const minecraftUtils = {

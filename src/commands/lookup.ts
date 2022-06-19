@@ -35,12 +35,13 @@ export default {
       if (!interaction.isChatInputCommand()) return;
       switch (index.name) {
         case 'name': {
-          const username = interaction.options.getString('username')!;
-          const user = minecraftUtils.profile(username)!; // no need to check if the type is set to string bruh
-          if (!user) { interaction.reply({ embeds: [embedUtils.error('No user found.')] }); return; }
-          const namesRes = minecraftUtils.nameHistory(user.id);
+          const username = interaction.options.getString('username');
+          if (!username) { interaction.reply({ embeds: [embedUtils.error('Please provide a username.')] }); return; }
+          const user = await minecraftUtils.profile(username);
+          if (!user) { interaction.reply({ embeds: [embedUtils.error(`No user found named ${username}`)] }); return; }
+          const namesRes = await minecraftUtils.nameHistory(user.id);
           if (!namesRes) { interaction.reply({ embeds: [embedUtils.error('Unknown error')] }); return; }
-          const texturesRes = minecraftUtils.textures(user.id)!;
+          const texturesRes = await minecraftUtils.textures(user.id);
           if (!texturesRes) { interaction.reply({ embeds: [embedUtils.error('Unknown error')] }); return; }
 
           const embed = new EmbedBuilder()
