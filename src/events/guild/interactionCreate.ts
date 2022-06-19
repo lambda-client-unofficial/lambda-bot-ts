@@ -13,6 +13,7 @@ export default async (client: Client, interaction: CommandInteraction) => {
     if (command.timeout) {
       if (timeout.has(`${interaction.user.id}${command.name}`)) {
         await interaction.reply({ embeds: [embedUtils.error(`You need to wait **${ms(command.timeout, { long: true })}** to use command again`)], ephemeral: true });
+        return;
       }
     }
     command.run(interaction, client);
