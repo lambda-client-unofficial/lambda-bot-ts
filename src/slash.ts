@@ -33,7 +33,6 @@ const scanCommands: Promise<Collection<string, Command>> = new Promise((resolve)
 });
 
 const registerSlashCommands = async (client: Client) => {
-  const start = Date.now();
   const c = await scanCommands;
   logger.log('[Discord API] Registering slash commands.');
   client.guilds.cache.forEach(async (guild: Guild) => {
