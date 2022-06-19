@@ -75,7 +75,11 @@ export default {
           return interaction.reply({ embeds: [embedUtils.success('Pulled successfully')] });
         }
         case 'push': {
-          await capeUtils.push();
+          try {
+            await capeUtils.push();
+          } catch (e: any) {
+            return interaction.reply({ embeds: [embedUtils.error(e.toString())] });
+          }
           return interaction.reply({ embeds: [embedUtils.success('Pushed to remote.')] });
         }
         case 'add': {
