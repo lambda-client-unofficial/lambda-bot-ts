@@ -89,7 +89,11 @@ export default {
           if (user === undefined) return interaction.reply({ embeds: [embedUtils.error('Please provide a valid user ID')] });
           const minecraftUUID = await uuidUtils.usernameToUUID(minecraftUsername);
           if (!minecraftUUID) return interaction.reply({ embeds: [embedUtils.error('Invalid username or nonexistent player')] });
-          await capeUtils.add(user.id, minecraftUUID);
+          try {
+            await capeUtils.add(user.id, minecraftUUID);
+          } catch (e: any) {
+            return interaction.reply({ embeds: [embedUtils.error(e.toString())] });
+          }
           return interaction.reply({ embeds: [embedUtils.success(`Added <@${user.id}>, Info: \`\`\`Username: ${minecraftUsername}\nUUID: ${minecraftUUID}\`\`\``)] });
         }
         default: return interaction.reply({ embeds: [embedUtils.error('Please choose something.')] });

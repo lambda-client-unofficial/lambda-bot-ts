@@ -2,6 +2,7 @@ import { Octokit } from 'octokit';
 import 'dotenv/config';
 import * as fs from 'graceful-fs';
 import { capeRepo } from '../../config';
+import logger from './logger';
 
 const octokit = new Octokit({
   auth: process.env.GITHUB_TOKEN,
@@ -19,15 +20,22 @@ async function pull(forced?: boolean) {
       if (fs.existsSync('../capes.json')) {
         if (String(Buffer.from(data.content, 'base64')) === String(fs.readFileSync('../capes.json'))) {
           if (!forced) return;
+          logger.error('[Capes] Conflict detected in capes.json');
           throw Error('Conflict detected in capes.json');
         }
-        fs.writeFileSync('../capes.json', Buffer.from(data.content, 'base64'));
-        fs.writeFileSync('../capes.json.shasum', data.sha);
       }
+      fs.writeFileSync('../capes.json', Buffer.from(data.content, 'base64'));
+      fs.writeFileSync('../capes.json.shasum', data.sha);
+      logger.log('[Capes] Pulled capes data from remote');
+    })
+    .catch((e) => {
+      logger.error(`[Capes] Error pulling data from remote: ${e.toString()}`);
+      throw e; // for discord command to fail
     });
 }
 
 async function push() {
+  logger.log('[Capes] Trying to push data to remote');
   if (!fs.existsSync('../capes.json')) {
     throw Error('File does not exist');
   }
@@ -46,10 +54,18 @@ async function push() {
     },
     content: Buffer.from(JSON.stringify(data)).toString('base64'),
     sha,
-  }).then((res) => res.data).catch((e) => e);
+  }).then((res) => {
+    logger.log('[Capes] Pushed capes data to remote');
+  }).catch((e) => {
+    logger.error(`[Capes] Error pushing data to remote: ${e.toString()}`);
+    throw e; // for discord command to fail
+  });
 }
 
 async function add(discordId: string, uuid: string) {
+  if (!fs.existsSync('../capes.json')) {
+    throw Error('File does not exist');
+  }
   const capes = JSON.parse(fs.readFileSync('../capes.json', 'utf8'));
   const template = {
     id: Number(discordId),
@@ -67,7 +83,8 @@ async function add(discordId: string, uuid: string) {
     is_premium: true,
   };
   capes.push(template);
-  fs.writeFileSync('../capes.json', JSON.stringify(capes));
+  fs.writeFileSync('../capes.json', JSON.stringify(capes, null, 2));
+  logger.log(`[Capes] Added ${discordId} with UUID ${uuid} to capes.json`);
 }
 
 const capeUtils = {
