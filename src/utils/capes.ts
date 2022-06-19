@@ -1,6 +1,7 @@
 import { Octokit } from 'octokit';
 import 'dotenv/config';
 import * as fs from 'graceful-fs';
+import * as crypto from 'crypto';
 import { capeRepo } from '../../config';
 import logger from './logger';
 
@@ -55,6 +56,8 @@ async function push() {
     content: Buffer.from(JSON.stringify(data)).toString('base64'),
     sha,
   }).then((res) => {
+    const shasum = crypto.createHash('sha1').update(data).digest('hex');
+    fs.writeFileSync('../capes.json.shasum', res.data.content?.sha ?? shasum);
     logger.log('[Capes] Pushed capes data to remote');
   }).catch((e) => {
     logger.error(`[Capes] Error pushing data to remote: ${e.toString()}`);
