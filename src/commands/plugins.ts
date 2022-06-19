@@ -8,9 +8,8 @@ export default {
   description: 'Check plugin list',
   timeout: ms('30s'),
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   run: async (interaction: CommandInteraction, _client: Client) => {
-    const pluginList = await (await listPlugins.listPlugins()).data;
+    const pluginList = (await listPlugins.listPlugins()).data;
     const pluginEmbed = new EmbedBuilder().setTitle('Plugins Informations');
     pluginList.forEach((plugin) => {
       pluginEmbed.addFields([{
@@ -20,7 +19,7 @@ export default {
                 Watchers: ${plugin.watchers_count}\n
                 Issues: ${plugin.open_issues_count}\n
                 Size: ${size(plugin.size as number)}\n
-                [Repository](${plugin.url})`,
+                [Repository](${plugin.html_url})`,
         inline: true,
       }]);
     });
