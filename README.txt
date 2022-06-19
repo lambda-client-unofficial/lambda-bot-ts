@@ -13,7 +13,7 @@ Then add these variables in your process enviroment, or your .env file:
 
     TOKEN="discord bot token"
     BOT_ID="discord bot id"
-    GITHUB_ID="github token with repository access"
+    GITHUB_TOKEN="github token with repository access"
 
 You can then run the bot by executing:
 
