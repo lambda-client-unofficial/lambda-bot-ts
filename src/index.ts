@@ -13,10 +13,10 @@ const client = new Client({
   ],
 });
 
-client.on('ready', () => {
-  logger.log(`Logged in as ${client.user?.tag}!`);
-  registerSlashCommands(client);
-  resgisterEvents(client);
+client.on('ready', async () => {
+  logger.log(`[Discord API] Logged in as ${client.user?.tag}!`.green);
+  await registerSlashCommands(client);
+  await resgisterEvents(client);
 });
 
 client.login(process.env.TOKEN);

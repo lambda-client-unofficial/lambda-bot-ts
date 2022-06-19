@@ -17,23 +17,25 @@ const rest = new REST({ version: '10' }).setToken(process.env.TOKEN);
 
 const commands = new Collection<string, Command>();
 
-const scanCommands = async () => {
-  await fs.readdirSync('./commands/').map(async (cmd: string) => {
+const scanCommands: Promise<Collection<string, Command>> = new Promise((resolve) => {
+  logger.log('[Commands] Scanning commands folder');
+  fs.readdirSync('./commands/').map(async (cmd: string) => {
+    logger.log(`[Commands] Loading ${cmd}`);
     try {
-      if (fs.lstatSync(`${__dirname}/commands/${cmd}`).isDirectory()) return;
+      if (!cmd.endsWith('.js')) return;
       const pull = await import(`${__dirname}/commands/${cmd}`);
       commands.set(pull.default.name, pull.default);
-      logger.log(`[COMMANDS] Scanned ${pull.default.name}`.green);
-    } catch (e) {
-      logger.warn(`Unable to load command ${cmd}: ${e}`);
+    } catch (e: any) {
+      logger.warn(`[Commands] Unable to load command ${cmd}: ${e.toString()}`.yellow);
     }
   });
-  return commands;
-};
+  resolve(commands);
+});
 
 const registerSlashCommands = async (client: Client) => {
-  const c = await scanCommands();
-  logger.log('[Discord API] Refreshing application commands.');
+  const start = Date.now();
+  const c = await scanCommands;
+  logger.log('[Discord API] Registering slash commands.');
   client.guilds.cache.forEach(async (guild: Guild) => {
     if (!process.env.BOT_ID) {
       logger.error('[Discord API] No bot ID found.');
@@ -44,7 +46,7 @@ const registerSlashCommands = async (client: Client) => {
       { body: c },
     );
   });
-  logger.log('[Discord API] Successfully registered all commands.');
+  logger.log(`[Discord API] Registered ${c.size} commands.`.green);
 };
 
 export {

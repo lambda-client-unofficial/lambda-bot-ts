@@ -8,7 +8,7 @@ import('colors');
 
 const events: any[] = [];
 
-const scanEvents = async (client: Client, dirs: String) => {
+const scanEvents = (client: Client, dirs: String) => new Promise<void>((resolve) => {
   const scannedEvents = fs.readdirSync(path.join(`${__dirname}/events/${dirs}/`)).filter((d: string) => d.endsWith('js'));
   scannedEvents.forEach(async (file) => {
     const evt = await import(`${__dirname}/events/${dirs}/${file}`);
@@ -17,14 +17,12 @@ const scanEvents = async (client: Client, dirs: String) => {
     events.push(evt);
     logger.log(`[Events] Loaded event ${eName}.`.green);
   });
-};
+  resolve();
+});
 
-const resgisterEvents = (client: Client) => {
-  [/* 'client', */'guild'].forEach((x) => {
-    scanEvents(client, x);
-    logger.log(`[Events] Loaded ${x} events.`.green);
-  });
-  logger.log('[Events] Successfully loaded all events.'.green);
+const resgisterEvents = async (client: Client) => {
+  logger.log('[Events] Loading events');
+  scanEvents(client, 'guild').then(() => logger.log('[Events] Successfully loaded all events.'.green));
 };
 
 export default resgisterEvents;
