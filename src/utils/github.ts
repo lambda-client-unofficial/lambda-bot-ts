@@ -15,5 +15,6 @@ const getIssue = async (owner: string | null, repo: string | null, issue_number:
 ).data as Issue;
 
 export {
+  // eslint-disable-next-line import/prefer-default-export
   getIssue,
 };
