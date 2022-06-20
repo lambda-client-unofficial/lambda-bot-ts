@@ -1,4 +1,4 @@
-import { MessageEmbed, Message } from 'discord.js';
+import { EmbedBuilder, Message } from 'discord.js';
 import * as githubUtils from '../../utils/github';
 import logger from '../../utils/logger';
 
@@ -15,12 +15,12 @@ export default async (message: Message) => {
       logger.error(`[Github] ${e.toString()}`.red);
       return;
     }
-    const embed = new MessageEmbed()
+    const embed = new EmbedBuilder()
       .setTitle(data.title)
       .setURL(data.html_url)
       .setDescription(data.body ?? 'No description provided')
       .setThumbnail(data.user.avatar_url)
-      .setColor('AQUA');
+      .setColor('Aqua');
     message.reply({ embeds: [embed] });
   }
 };
