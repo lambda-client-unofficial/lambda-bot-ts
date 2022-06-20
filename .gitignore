@@ -6,3 +6,5 @@ capes.json.shasum
 json.sqlite
 .env
 config.js
+
+config.ts
