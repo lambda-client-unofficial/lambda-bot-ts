@@ -1,4 +1,4 @@
-import { MessageEmbed, Message } from 'discord.js';
+import { EmbedBuilder, Message } from 'discord.js';
 import embedUtils from '../../utils/embed';
 import * as githubUtils from '../../utils/github';
 import logger from '../../utils/logger';
@@ -22,7 +22,7 @@ export default async (message: Message) => {
       .setURL(data.html_url)
       .setDescription(data.body ?? 'No description provided')
       .setThumbnail(data.user.avatar_url)
-      .setColor('AQUA');
+      .setColor('Aqua');
     (await message.reply({ embeds: [embed] })).react('🗑');
   }
 };
