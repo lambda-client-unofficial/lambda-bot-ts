@@ -9,6 +9,11 @@ Create a config.ts file with a following content in the project directory:
         branch: '',                  // the branch of the capes.json file
     }
 
+    export const defaultRepo = {
+        owner: '',              // owner of repo to look up issues and pull requests by default
+        repo: '',               // repository name to look up issues and pull requests by default
+    };
+
 Then add these variables in your process enviroment, or your .env file:
 
     TOKEN="discord bot token"
