@@ -1,10 +1,8 @@
 import {
   CommandInteraction,
-  EmbedBuilder,
-  ActionRowBuilder,
-  ButtonBuilder,
-  ButtonStyle,
-  Colors,
+  MessageActionRow,
+  MessageButton,
+  MessageEmbed,
 } from 'discord.js';
 import embedUtils from '../utils/embed.js';
 import minecraftUtils from '../utils/minecraftProfile';
@@ -32,7 +30,7 @@ export default {
 
   run: async (interaction: CommandInteraction) => {
     interaction.options.data.forEach(async (index) => {
-      if (!interaction.isChatInputCommand()) return;
+      if (!interaction.isCommand()) return;
       switch (index.name) {
         case 'name': {
           const username = interaction.options.getString('username');
@@ -44,11 +42,11 @@ export default {
           const texturesRes = await minecraftUtils.textures(user.id);
           if (!texturesRes) { interaction.reply({ embeds: [embedUtils.error('Unknown error')] }); return; }
 
-          const embed = new EmbedBuilder()
+          const embed = new MessageEmbed()
             .setTitle(`${username}'s Profile`)
             .addFields([{ name: 'UUID:', value: user.id }])
             .setImage(`https://crafatar.com/renders/body/${user.id}?overlay`)
-            .setColor(Colors.Blue);
+            .setColor('BLUE');
           try {
             namesRes.forEach((name: Names[0]) => {
               const time = name.changedToAt !== undefined ? new Date(name.changedToAt).toLocaleString('en-US') : 'First Appeared Name';
@@ -58,14 +56,14 @@ export default {
             interaction.reply({ embeds: [embedUtils.error(e.toString())] });
             return;
           }
-          const row = new ActionRowBuilder().addComponents([
-            new ButtonBuilder()
-              .setStyle(ButtonStyle.Link)
+          const row = new MessageActionRow().addComponents([
+            new MessageButton()
+              .setStyle('LINK')
               .setURL(texturesRes.textures.SKIN.url)
               .setLabel('Player skin'),
           ]).addComponents([
-            new ButtonBuilder()
-              .setStyle(ButtonStyle.Link)
+            new MessageButton()
+              .setStyle('LINK')
               .setURL(`https://namemc.com/search?q=${username}`)
               .setLabel('NameMC'),
           ]);

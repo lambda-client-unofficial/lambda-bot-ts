@@ -1,4 +1,4 @@
-import { APIUser, Snowflake } from 'discord.js';
+import { Snowflake } from 'discord.js';
 import fetch from 'cross-fetch';
 
 async function checkuser(id: Snowflake) {
@@ -7,7 +7,7 @@ async function checkuser(id: Snowflake) {
       Authorization: `Bot ${process.env.TOKEN}`,
     },
   });
-  return req.ok ? await req.json() as APIUser : undefined;
+  return req.ok ? await req.json() as any : undefined;
 }
 
 const discordUtils = {
