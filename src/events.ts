@@ -13,7 +13,7 @@ const scanEvents = (client: Client, dirs: String) => new Promise<void>((resolve)
   scannedEvents.forEach(async (file) => {
     const evt = await import(`${__dirname}/events/${dirs}/${file}`);
     const eName = file.split('.')[0];
-    client.on(eName, evt.default.bind(null, client));
+    client.on(eName, evt.default);
     events.push(evt);
     logger.log(`[Events] Loaded event ${eName}.`.green);
   });
