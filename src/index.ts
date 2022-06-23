@@ -10,6 +10,7 @@ const client = new Client({
     GatewayIntentBits.Guilds,
     GatewayIntentBits.GuildMessages,
     GatewayIntentBits.MessageContent,
+    GatewayIntentBits.GuildPresences,
   ],
 });
 
@@ -17,6 +18,15 @@ client.on('ready', async () => {
   logger.log(`[Discord API] Logged in as ${client.user?.tag}!`.green);
   await registerSlashCommands(client);
   await resgisterEvents(client);
+});
+
+client.on('presenceUpdate', async (newPresence) => {
+  if (!newPresence) return;
+  newPresence.activities.forEach(activity => {
+    if (activity.applicationId?.toString() === '638403216278683661') {
+      logger.log(`[Kami Blue] <@${newPresence.userId}> is apparently using kami blue`);
+    }
+  });
 });
 
 client.login(process.env.TOKEN);
