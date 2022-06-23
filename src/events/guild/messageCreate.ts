@@ -14,7 +14,7 @@ export default async (message: Message) => {
       data = await githubUtils.getIssue(null, null, Number(match[0].slice(1)));
     } catch (e: any) {
       logger.error(`[Github] ${e.toString()}`.red);
-      message.reply({ embeds: [embedUtils.error(e.toString())] });
+      (await message.reply({ embeds: [embedUtils.error(e.toString())] })).react('🗑');
       return;
     }
     const embed = new MessageEmbed()
