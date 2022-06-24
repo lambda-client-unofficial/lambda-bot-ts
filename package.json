@@ -25,6 +25,7 @@
     "octokit": "^1.7.1",
     "path": "^0.12.7",
     "quick.db": "^7.1.3",
+    "read-last-lines": "^1.8.0",
     "sha1": "^1.1.1",
     "timestamp-to-date": "^1.1.0"
   },

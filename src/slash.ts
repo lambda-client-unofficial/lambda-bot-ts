@@ -6,8 +6,6 @@ import * as fs from 'graceful-fs';
 import logger from './utils/logger';
 import Command from './types/command';
 
-import('colors');
-
 if (!process.env.TOKEN) {
   logger.error('[Discord API] No token found.');
   throw Error('No token found.');
@@ -26,7 +24,7 @@ const scanCommands: Promise<Collection<string, Command>> = new Promise((resolve)
       const pull = await import(`${__dirname}/commands/${cmd}`);
       commands.set(pull.default.name, pull.default);
     } catch (e: any) {
-      logger.warn(`[Commands] Unable to load command ${cmd}: ${e.toString()}`.yellow);
+      logger.warn(`[Commands] Unable to load command ${cmd}: ${e.toString()}`);
     }
   });
   resolve(commands);
@@ -45,7 +43,7 @@ const registerSlashCommands = async (client: Client) => {
       { body: c },
     );
   });
-  logger.log(`[Discord API] Registered ${c.size} commands.`.green);
+  logger.success(`[Discord API] Registered ${c.size} commands.`);
 };
 
 export {

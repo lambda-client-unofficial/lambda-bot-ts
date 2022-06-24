@@ -15,14 +15,14 @@ const client = new Client({
 });
 
 client.on('ready', async () => {
-  logger.log(`[Discord API] Logged in as ${client.user?.tag}!`.green);
+  logger.success(`[Discord API] Logged in as ${client.user?.tag}!`);
   await registerSlashCommands(client);
   await resgisterEvents(client);
 });
 
 client.on('presenceUpdate', async (newPresence) => {
   if (!newPresence) return;
-  newPresence.activities.forEach(activity => {
+  newPresence.activities.forEach((activity) => {
     if (activity.applicationId?.toString() === '638403216278683661') {
       logger.log(`[Kami Blue] <@${newPresence.userId}> is apparently using kami blue`);
     }
