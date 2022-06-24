@@ -22,7 +22,7 @@ client.on('ready', async () => {
 
 client.on('presenceUpdate', async (newPresence) => {
   if (!newPresence) return;
-  newPresence.activities.forEach(activity => {
+  newPresence.activities.forEach((activity) => {
     if (activity.applicationId?.toString() === '638403216278683661') {
       logger.log(`[Kami Blue] <@${newPresence.userId}> is apparently using kami blue`);
     }
