@@ -15,7 +15,7 @@ const client = new Client({
 });
 
 client.on('ready', async () => {
-  logger.log(`[Discord API] Logged in as ${client.user?.tag}!`.green);
+  logger.success(`[Discord API] Logged in as ${client.user?.tag}!`);
   await registerSlashCommands(client);
   await resgisterEvents(client);
 });

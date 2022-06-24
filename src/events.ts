@@ -4,8 +4,6 @@ import * as path from 'path';
 
 import logger from './utils/logger';
 
-import('colors');
-
 const events: any[] = [];
 
 const scanEvents = (client: Client, dirs: String) => new Promise<void>((resolve) => {
@@ -16,18 +14,18 @@ const scanEvents = (client: Client, dirs: String) => new Promise<void>((resolve)
     try {
       client.on(eName, evt.default);
     } catch (e: any) {
-      logger.warn(`[Events] Failed to load event ${eName}: ${e.toString()}`.yellow);
+      logger.warn(`[Events] Failed to load event ${eName}: ${e.toString()}`);
       return;
     }
     events.push(evt);
-    logger.log(`[Events] Loaded event ${eName}.`.green);
+    logger.success(`[Events] Loaded event ${eName}.`);
   });
   resolve();
 });
 
 const resgisterEvents = async (client: Client) => {
-  logger.log('[Events] Loading events');
-  scanEvents(client, 'guild').then(() => logger.log('[Events] Successfully loaded all events.'.green));
+  logger.log('[Events] Loading events.');
+  scanEvents(client, 'guild');
 };
 
 export default resgisterEvents;
