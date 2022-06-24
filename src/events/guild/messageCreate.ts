@@ -10,24 +10,25 @@ const fullCommitRegex = /[a-zA-Z0-9](?:[a-zA-Z0-9]|-(?=[a-zA-Z0-9])){0,38}\/[a-z
 
 export default async (_client: Client, message: Message) => {
   if (message.author.bot) return;
+  if (/<.+:\d+>/g.test(message.content)) return;
 
   if (issueRegex.test(message.content) || fullIssueRegex.test(message.content)) {
     try {
       const match = message.content.match(fullIssueRegex)![0].split('#');
-      message.reply(`https://github.com/${match[0].split('/')[0]}/${match[0].split('/')[1]}/issues/${match[1]}`);
+      (await message.reply(`https://github.com/${match[0].split('/')[0]}/${match[0].split('/')[1]}/issues/${match[1]}`)).react('🗑');
     } catch (e) {
       const match = message.content.match(issueRegex)!;
-      message.reply(`https://github.com/${defaultRepo.owner}/${defaultRepo.repo}/issues/${match[0].slice(1)}`);
+      (await message.reply(`https://github.com/${defaultRepo.owner}/${defaultRepo.repo}/issues/${match[0].slice(1)}`)).react('🗑');
     }
   }
 
   if (commitRegex.test(message.content) || fullCommitRegex.test(message.content)) {
     try {
       const match = message.content.match(fullCommitRegex)![0].split('@');
-      message.reply(`https://github.com/${match[0].split('/')[0]}/${match[0].split('/')[1]}/commit/${match[1]}`);
+      (await message.reply(`https://github.com/${match[0].split('/')[0]}/${match[0].split('/')[1]}/commit/${match[1]}`)).react('🗑');
     } catch (e) {
       const match = message.content.match(commitRegex)!;
-      message.reply(`https://github.com/${defaultRepo.owner}/${defaultRepo.repo}/commit/${match[0]}`);
+      (await message.reply(`https://github.com/${defaultRepo.owner}/${defaultRepo.repo}/commit/${match[0]}`)).react('🗑');
     }
   }
 };
