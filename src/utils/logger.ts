@@ -1,6 +1,7 @@
 /* eslint-disable no-console */
 import colors from 'colors';
 import fs from 'graceful-fs';
+import readLastLines from 'read-last-lines';
 
 class Logger {
   logName: string;
@@ -22,13 +23,17 @@ class Logger {
   }
 
   warn(message: string) {
-    fs.appendFileSync(this.logName, `${(new Date()).toLocaleString()} [INFO] ${message}\n`);
+    fs.appendFileSync(this.logName, `${(new Date()).toLocaleString()} [WARN] ${message}\n`);
     console.warn(`${colors.gray((new Date()).toLocaleString())} ${colors.yellow('[WARN]')} ${message}`);
   }
 
   error(message: string) {
-    fs.appendFileSync(this.logName, `${(new Date()).toLocaleString()} [INFO] ${message}\n`);
+    fs.appendFileSync(this.logName, `${(new Date()).toLocaleString()} [ERROR] ${message}\n`);
     console.error(`${colors.gray((new Date()).toLocaleString())} ${colors.red('[ERROR]')} ${message}`);
+  }
+
+  last(amount: number | void) {
+    return readLastLines.read(this.logName, amount ?? 10);
   }
 }
 
