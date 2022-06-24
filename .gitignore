@@ -5,3 +5,4 @@ capes.json
 capes.json.shasum
 .env
 config.ts
+logs/*
