@@ -1,4 +1,4 @@
-import { Message } from 'discord.js';
+import { Client, Message } from 'discord.js';
 import { defaultRepo } from '../../../config';
 
 import('colors');
@@ -8,7 +8,7 @@ const fullIssueRegex = /[a-zA-Z0-9](?:[a-zA-Z0-9]|-(?=[a-zA-Z0-9])){0,38}\/[a-zA
 const commitRegex = /([a-fA-F0-9]{40})|([a-fA-F0-9]{7})/g; // either 40 characters long alphanumeric or 7 characters alphanumeric
 const fullCommitRegex = /[a-zA-Z0-9](?:[a-zA-Z0-9]|-(?=[a-zA-Z0-9])){0,38}\/[a-zA-Z0-9](?:[a-zA-Z0-9]|-(?=[a-zA-Z0-9])){0,38}@(?:([a-fA-F0-9]{40})|([a-fA-F0-9]{7}))/g; // validUsername/validReponame@validCommit
 
-export default async (message: Message) => {
+export default async (_client: Client, message: Message) => {
   if (message.author.bot) return;
 
   if (issueRegex.test(message.content) || fullIssueRegex.test(message.content)) {
