@@ -1,4 +1,4 @@
-import { Client, CommandInteraction, MessageEmbed } from 'discord.js';
+import { Client, CommandInteraction, EmbedBuilder } from 'discord.js';
 import logger from '../utils/logger';
 
 const colorFormat = (log: string) => log
@@ -15,10 +15,10 @@ export default {
   description: 'Get last 10 lines of log',
   run: async (interaction: CommandInteraction, _client: Client) => {
     if (!interaction.isCommand()) return;
-    const embed = new MessageEmbed()
+    const embed = new EmbedBuilder()
       .setTitle('Last 10 lines of log file')
       .setDescription(`\`\`\`diff\n${colorFormat(await logger.last(10))}\`\`\``)
-      .setColor('AQUA');
+      .setColor('Aqua');
     interaction.reply({ embeds: [embed] });
   },
 };
